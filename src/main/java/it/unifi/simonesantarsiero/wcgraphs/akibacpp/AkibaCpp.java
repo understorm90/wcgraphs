@@ -87,7 +87,7 @@ public class AkibaCpp implements Algorithm {
         try (InputStream is = getClass().getResourceAsStream("/" + fileName)) {
             Files.copy(is, Paths.get(workingDirectory + "/" + fileName));
         } catch (IOException e) {
-            LOGGER.error("IOException: ", e);
+
         }
     }
 
