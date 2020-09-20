@@ -1,5 +1,6 @@
 package it.unifi.simonesantarsiero.wcgraphs.akibajava;
 
+import it.unifi.simonesantarsiero.wcgraphs.commons.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
