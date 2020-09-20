@@ -1,5 +1,6 @@
 package it.unifi.simonesantarsiero.wcgraphs.webgraph;
 
+import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import it.unimi.dsi.webgraph.ImmutableGraph;
 import it.unimi.dsi.webgraph.LazyIntIterator;
@@ -48,5 +49,9 @@ public class WebGraphDecoder {
         } catch (IOException e) {
             LOGGER.error("IOException", e);
         }
+    }
+
+    public static void disableLogger() {
+        LOGGER.setLevel(Level.toLevel("error"));
     }
 }

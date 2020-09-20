@@ -2,7 +2,6 @@ package it.unifi.simonesantarsiero.wcgraphs.commons;
 
 public class Utils {
     private Utils() {
-
     }
 
     public static final String DATASETS_PATH = "/DATASETS/example/";
