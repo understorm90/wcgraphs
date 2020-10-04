@@ -17,7 +17,7 @@
     <logback.classic.version>1.2.3</logback.classic.version>
     <fastutil.version>8.3.0</fastutil.version>
     <commons.lang.version>2.6</commons.lang.version>
-    <webgraph.version>3.6.3</webgraph.version>
+    <webgraph.version>3.6.5</webgraph.version>
     <jfreechart.version>1.0.13</jfreechart.version>
     <mockito-core.version>3.5.0</mockito-core.version>
   </properties>
@@ -50,7 +50,7 @@
       <version>${commons.lang.version}</version>
     </dependency>
 
-    <!--    da aggiungere a mano-->
+    <!--    sumsweep da aggiungere a mano-->
     <dependency>
       <groupId>it.borassi</groupId>
       <artifactId>sumsweep</artifactId>

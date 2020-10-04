@@ -13,14 +13,15 @@ import java.util.Map;
 public class DatasetLogger {
 
     private Logger LOGGER;
-
-    private String header = "| Graph                        |";
-    protected IntArrayList lengths = IntArrayList.wrap(new int[] { header.length() - 4 });
+    private String header;
+    protected IntArrayList lengths;
     protected int contLengths;
     private List<String> headers;
 
     public DatasetLogger(List<String> headersList, Logger logger) {
         LOGGER = logger;
+        header = "| " + Utils.VALUE_GRAPH + StringUtils.leftPad("", 30) + "|";
+        lengths = IntArrayList.wrap(new int[] { header.length() - 4 });
         headers = headersList;
 
         for (String h : headers) {
