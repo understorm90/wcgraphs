@@ -23,9 +23,8 @@ public class WebGraphDecoder {
 
     public static void decode(String basename) {
 
-        try {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(basename + EXT_TSV))) {
             ImmutableGraph graph = ImmutableGraph.load(basename);
-            BufferedWriter bw = new BufferedWriter(new FileWriter(basename + EXT_TSV));
 
             int nNodes = graph.numNodes();
             LOGGER.info("Vertices: {}\n", nNodes);
@@ -44,7 +43,6 @@ public class WebGraphDecoder {
                 }
             }
             bw.flush();
-            bw.close();
             LOGGER.info("Output Edges: {}\n", nEdges);
         } catch (IOException e) {
             LOGGER.error("IOException", e);

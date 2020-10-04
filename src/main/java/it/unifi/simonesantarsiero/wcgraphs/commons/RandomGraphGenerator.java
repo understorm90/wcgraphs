@@ -93,8 +93,7 @@ public class RandomGraphGenerator {
         if (edges == null) {
             return;
         }
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(name + EXT_TSV));
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(name + EXT_TSV))) {
             for (Pair<Integer, Integer> pair : edges) {
                 bw.write(Integer.toString(pair.getFirst()));
                 bw.write("\t");
@@ -102,7 +101,6 @@ public class RandomGraphGenerator {
                 bw.write("\n");
             }
             bw.flush();
-            bw.close();
         } catch (IOException e) {
             LOGGER.error("IOException", e);
         }

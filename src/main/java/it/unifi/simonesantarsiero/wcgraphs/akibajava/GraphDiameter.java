@@ -343,20 +343,18 @@ public class GraphDiameter {
 	}
 
 	public int getDiameter(String filename, int numDoubleSweep) {
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(filename));
+		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 
 			ArrayList<Pair<Integer, Integer>> edges = new ArrayList<>();
 
 			String currentLine;
-			String []currentVertices;
+			String[] currentVertices;
 			while ((currentLine = br.readLine()) != null) {
 				currentVertices = currentLine.split("\t");
 				int currentFirstVertex = Integer.parseInt(currentVertices[0]);
 				int currentSecondVertex = Integer.parseInt(currentVertices[1]);
 				edges.add(new Pair<>(currentFirstVertex, currentSecondVertex));
 			}
-			br.close();
 			return getDiameter(edges, numDoubleSweep);
 
 		} catch (IOException e) {

@@ -12,14 +12,14 @@ import java.util.Map;
 
 public class DatasetLogger {
 
-    private Logger LOGGER;
+    private Logger logger;
     private String header;
     protected IntArrayList lengths;
     protected int contLengths;
     private List<String> headers;
 
     public DatasetLogger(List<String> headersList, Logger logger) {
-        LOGGER = logger;
+        this.logger = logger;
         header = "| " + Utils.VALUE_GRAPH + StringUtils.leftPad("", 45) + "|";
         lengths = IntArrayList.wrap(new int[]{header.length() - 4});
         headers = headersList;
@@ -37,19 +37,19 @@ public class DatasetLogger {
     }
 
     private void printHeader() {
-        LOGGER.info("\n{}\n", header);
+        logger.info("\n{}\n", header);
         // rimpiazza:
         // - spazi vuoti
         // - oppure parole
         // - oppure parentesi aperte
         // - oppure parentesi chiuse
         header = header.replaceAll(" |\\w|\\(|\\)", "_");
-        LOGGER.info("{}", header);
+        logger.info("{}", header);
     }
 
     private void setContLengths(int value) {
         contLengths = value;
-        LOGGER.info("\n| ");
+        logger.info("\n| ");
     }
 
     private void printValue(String value, boolean left) {
@@ -61,16 +61,12 @@ public class DatasetLogger {
         }
         if (left) {
             String rightPad = StringUtils.rightPad(value, length);
-            LOGGER.info("{} | ", rightPad);
+            logger.info("{} | ", rightPad);
         } else {
             String leftPad = StringUtils.leftPad(value, length);
-            LOGGER.info("{} | ", leftPad);
+            logger.info("{} | ", leftPad);
         }
     }
-//
-//    private void printValue(String value) {
-//        printValue(value, false);
-//    }
 
     public void printValues(Map<String, Object> values) {
         for (String h : headers) {
