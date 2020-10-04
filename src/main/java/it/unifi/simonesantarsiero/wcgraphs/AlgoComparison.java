@@ -4,7 +4,6 @@ import ch.qos.logback.classic.Logger;
 import it.unifi.simonesantarsiero.wcgraphs.akibacpp.AkibaCpp;
 import it.unifi.simonesantarsiero.wcgraphs.akibajava.AkibaJava;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
-
 import it.unifi.simonesantarsiero.wcgraphs.newsumsweep.NewSumSweep;
 import it.unifi.simonesantarsiero.wcgraphs.newsumsweep.NewSumSweepDir;
 import it.unifi.simonesantarsiero.wcgraphs.sumsweep.SumSweep;
@@ -14,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
@@ -42,16 +40,16 @@ public class AlgoComparison {
         }
     }
 
-    public AlgoComparison(String path, boolean runningFromTerminal) {
+    public AlgoComparison(String datasetPath, boolean runningFromTerminal) {
         String workingDirectory = System.getProperty("user.dir");
         String datasetsPath;
         List<String> list;
 
         if (runningFromTerminal) {
-            datasetsPath = workingDirectory + "/";
+            datasetsPath = "";
 
             list = new ArrayList<>();
-            list.add(path);
+            list.add(datasetPath);
         } else {
             datasetsPath = workingDirectory + DATASETS_PATH;
 
@@ -68,12 +66,12 @@ public class AlgoComparison {
 
         for (String filename : list) {
             loader.printFilename(filename+ " [akiba-cpp]");
-            AkibaCpp akibaCpp = new AkibaCpp(DATASETS_PATH + filename, true);
+            AkibaCpp akibaCpp = new AkibaCpp(datasetsPath + filename, runningFromTerminal);
             mStatsAkibaCPP.add(akibaCpp.getResults());
             loader.printValues(akibaCpp.getResults());
 
             loader.printFilename(filename + " [akiba-java]");
-            AkibaJava akibaJava = new AkibaJava(DATASETS_PATH + filename, true);
+            AkibaJava akibaJava = new AkibaJava(datasetsPath + filename, runningFromTerminal);
             mStatsAkiba.add(akibaJava.getResults());
             loader.printValues(akibaJava.getResults());
 
@@ -86,7 +84,7 @@ public class AlgoComparison {
 //            loader.printValues(webGraph.getResults());
 //
             loader.printFilename(filename+ " [newsumsweep]");
-            NewSumSweep newSumSweep = new NewSumSweep(DATASETS_PATH + filename, true);
+            NewSumSweep newSumSweep = new NewSumSweep(datasetsPath + filename, runningFromTerminal);
             mStatsNewSumSweep.add(newSumSweep.getResults());
             loader.printValues(newSumSweep.getResults());
 
