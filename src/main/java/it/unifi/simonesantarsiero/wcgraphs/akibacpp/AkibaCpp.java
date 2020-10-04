@@ -43,7 +43,7 @@ public class AkibaCpp implements Algorithm {
         List<String> list;
 
         if (runningFromTerminal) {
-            currentPath = workingDirectory + "/";
+            currentPath = workingDirectory + SLASH;
             datasetsPath = currentPath;
 
             // copy .CPP and .H files
@@ -53,7 +53,7 @@ public class AkibaCpp implements Algorithm {
             list = new ArrayList<>();
             list.add(path);
         } else {
-            currentPath = getClass().getResource("/").getPath();
+            currentPath = getClass().getResource(SLASH).getPath();
             datasetsPath = workingDirectory + DATASETS_PATH;
 
             list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
@@ -84,8 +84,8 @@ public class AkibaCpp implements Algorithm {
     }
 
     private void copyFileFromResources(String workingDirectory, String fileName) {
-        try (InputStream is = getClass().getResourceAsStream("/" + fileName)) {
-            Files.copy(is, Paths.get(workingDirectory + "/" + fileName));
+        try (InputStream is = getClass().getResourceAsStream(SLASH + fileName)) {
+            Files.copy(is, Paths.get(workingDirectory + SLASH + fileName));
         } catch (IOException e) {
 
         }

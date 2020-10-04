@@ -40,7 +40,7 @@ public class NewSumSweep implements Algorithm {
         List<String> list;
 
         if (runningFromTerminal) {
-            datasetsPath = workingDirectory + "/";
+            datasetsPath = workingDirectory + SLASH;
 
             list = new ArrayList<>();
             list.add(datasetPath);
