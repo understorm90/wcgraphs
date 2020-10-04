@@ -87,7 +87,9 @@
       </resource>
     </resources>
 
-    <!--    altrimenti avrei potuto utilizzare-->
+    <!--    con questo plugin, possiamo lanciare direttamente il jar con il comando-->
+    <!--    java -jar app.jar <datasetPath>-->
+    <!--    altrimenti avrei dovuto utilizzare, come faccio per le altri classi-->
     <!--    java -cp yourJarName.jar your.package..your.MainClass-->
     <plugins>
       <!-- prima copiamo le dipendenze in una cartella libs -->
@@ -120,7 +122,7 @@
               <addClasspath>true</addClasspath>
               <classpathPrefix>libs/</classpathPrefix>
               <mainClass>
-                it.unifi.simonesantarsiero.wcgraphs.Main
+                it.unifi.simonesantarsiero.wcgraphs.AlgoComparison
               </mainClass>
             </manifest>
           </archive>
