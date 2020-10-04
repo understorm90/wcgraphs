@@ -1,7 +1,7 @@
 package it.unifi.simonesantarsiero.wcgraphs.akibajava;
 
+import ch.qos.logback.classic.Logger;
 import it.unifi.simonesantarsiero.wcgraphs.commons.Pair;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
@@ -11,7 +11,9 @@ import java.util.*;
 
 public class GraphDiameter {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(GraphDiameter.class);
+//	private static final Logger LOGGER = LoggerFactory.getLogger(GraphDiameter.class);
+
+	private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(AkibaJava.class);
 
 	private static final int NUM_DEFAULT_DOUBLE_SWEEP = 10;
 	private int nVertices;
@@ -44,18 +46,17 @@ public class GraphDiameter {
 	private int[] getSCC(ArrayList<LinkedList<Integer>> graph) {
 		int numVisit = 0;
 		int numScc = 0;
-		int []scc = new int[nVertices];
-		int []ord = new int[nVertices];
-		int []low = new int[nVertices];
-		boolean []in = new boolean[nVertices];
-		for(int i = 0; i < nVertices; i++) {
-			scc[i] = -1;
-			ord[i] = -1;
-			low[i] = -1;
-			in[i] = false;
-		}
-		Stack<Integer> s = new Stack<>();
-		Stack<Pair<Integer, Integer>> dfs = new Stack<>();
+		int[] scc = new int[nVertices];
+		int[] ord = new int[nVertices];
+		int[] low = new int[nVertices];
+		boolean[] in = new boolean[nVertices];
+		Arrays.fill(scc, -1);
+		Arrays.fill(ord, -1);
+		Arrays.fill(low, -1);
+		Arrays.fill(in, false);
+
+		Deque<Integer> s = new ArrayDeque<>();
+		Deque<Pair<Integer, Integer>> dfs = new ArrayDeque<>();
 
 		for (int i = 0; i < nVertices; i++) {
 			if (ord[i] != -1) {
@@ -93,17 +94,15 @@ public class GraphDiameter {
 				}
 
 				if (index == graph.get(v).size() && low[v] == ord[v]) {
-					while (true) {
-						int w = s.peek();
+
+					int w;
+					do {
+						w = s.peek();
 
 						s.pop();
 						in[w] = false;
 						scc[w] = numScc;
-
-						if (v == w) {
-							break;
-						}
-					}
+					} while (v != w);
 
 					numScc++;
 				}
@@ -232,7 +231,7 @@ public class GraphDiameter {
 
 			// SCC : reverse topological order
 			// inside an SCC : decreasing order of the product of the indegree and outdegree for vertices in the same SCC
-			Pair<Long, Integer> pl = new Pair<>((long)(scc[v] << 32) - indegree * outdegree, v);
+			Pair<Long, Integer> pl = new Pair<>((long) (scc[v]) - indegree * outdegree, v);
 			order.set(v, pl);
 		}
 
