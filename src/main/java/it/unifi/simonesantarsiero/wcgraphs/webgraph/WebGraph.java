@@ -1,24 +1,17 @@
 package it.unifi.simonesantarsiero.wcgraphs.webgraph;
 
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.DATASETS_PATH;
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.EXT_GRAPH;
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.VALUE_DATASET;
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.VALUE_DIAMETER;
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.VALUE_NN;
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.VALUE_NUM_OF_BFS;
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.VALUE_TIME;
-
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import it.unimi.dsi.webgraph.ImmutableGraph;
 import it.unimi.dsi.webgraph.algo.SumSweepDirectedDiameterRadius;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
 
-import org.slf4j.LoggerFactory;
+import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
 public class WebGraph implements Algorithm {
 
@@ -29,12 +22,11 @@ public class WebGraph implements Algorithm {
     public static void main(String[] args) {
         if (System.console() != null) {
             if (args.length != 1) {
-                LOGGER.info("Usage: java -jar app.jar GRAPH\n\n");
+                LOGGER.info(USAGE_ERROR_MESSAGE, WebGraph.class.getCanonicalName());
                 return;
             }
             new WebGraph(args[0], true);
         } else {
-            System.out.println("intellij");
             new WebGraph("", false);
         }
     }

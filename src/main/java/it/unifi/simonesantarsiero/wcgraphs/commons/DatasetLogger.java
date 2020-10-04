@@ -20,8 +20,8 @@ public class DatasetLogger {
 
     public DatasetLogger(List<String> headersList, Logger logger) {
         LOGGER = logger;
-        header = "| " + Utils.VALUE_GRAPH + StringUtils.leftPad("", 30) + "|";
-        lengths = IntArrayList.wrap(new int[] { header.length() - 4 });
+        header = "| " + Utils.VALUE_GRAPH + StringUtils.leftPad("", 45) + "|";
+        lengths = IntArrayList.wrap(new int[]{header.length() - 4});
         headers = headersList;
 
         for (String h : headers) {
@@ -37,7 +37,7 @@ public class DatasetLogger {
     }
 
     private void printHeader() {
-        LOGGER.info("{}\n", header);
+        LOGGER.info("\n{}\n", header);
         // rimpiazza:
         // - spazi vuoti
         // - oppure parole

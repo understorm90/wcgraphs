@@ -30,12 +30,11 @@ public class AlgoComparison {
 
         if (System.console() != null) {
             if (args.length != 1) {
-                LOGGER.info("Usage: java -jar app.jar GRAPH\n\n");
+                LOGGER.info(USAGE_ERROR_MESSAGE, AlgoComparison.class.getCanonicalName());
                 return;
             }
             new AlgoComparison(args[0], true);
         } else {
-            System.out.println("intellij");
             new AlgoComparison("", false);
         }
     }

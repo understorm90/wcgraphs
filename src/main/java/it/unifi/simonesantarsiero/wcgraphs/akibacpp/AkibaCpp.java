@@ -1,9 +1,9 @@
 package it.unifi.simonesantarsiero.wcgraphs.akibacpp;
 
-import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
-import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
+import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class AkibaCpp implements Algorithm {
     public static void main(String[] args) {
         if (System.console() != null) {
             if (args.length != 1) {
-                LOGGER.info("Usage: java -jar app.jar GRAPH\n\n");
+                LOGGER.info(USAGE_ERROR_MESSAGE, AkibaCpp.class.getCanonicalName());
                 return;
             }
             new AkibaCpp(args[0], true);

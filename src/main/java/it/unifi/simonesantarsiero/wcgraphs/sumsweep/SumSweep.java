@@ -1,11 +1,11 @@
 package it.unifi.simonesantarsiero.wcgraphs.sumsweep;
 
 import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import graph.Dir;
 import graph.GraphTypes;
 import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
-import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.Utilities;
 
@@ -25,12 +25,11 @@ public class SumSweep implements Algorithm {
     public static void main(String[] args) {
         if (System.console() != null) {
             if (args.length != 1) {
-                LOGGER.info("Usage: java -jar app.jar GRAPH\n\n");
+                LOGGER.info(USAGE_ERROR_MESSAGE, SumSweep.class.getCanonicalName());
                 return;
             }
             new SumSweep(args[0], true);
         } else {
-            System.out.println("intellij");
             new SumSweep("", false);
         }
     }
