@@ -21,8 +21,8 @@ public class AlgoComparison {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(AlgoComparison.class);
 
     public static void main(String[] args) {
-        AkibaJava.disableLogger();
         AkibaCpp.disableLogger();
+        AkibaJava.disableLogger();
         SumSweep.disableLogger();
         WebGraph.disableLogger();
         NewSumSweep.disableLogger();
@@ -39,20 +39,17 @@ public class AlgoComparison {
         }
     }
 
-    public AlgoComparison(String datasetPath, boolean runningFromTerminal) {
+    public AlgoComparison(String datasetFile, boolean runningFromTerminal) {
+
         String workingDirectory = System.getProperty("user.dir");
-        String datasetsPath;
-        List<String> list;
+        String datasetsPath = "";
+        List<String> list = new ArrayList<>();
+        ;
 
         if (runningFromTerminal) {
-            datasetsPath = "";
-
-            list = new ArrayList<>();
-            list.add(datasetPath);
+            list.add(datasetFile);
         } else {
-            datasetsPath = workingDirectory + DATASETS_PATH;
-
-            list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+            list.addAll(DatasetLogger.getListOfGraphsAvailableInDirectory(workingDirectory + DATASETS_PATH, EXT_TSV));
         }
 
         List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
@@ -60,38 +57,52 @@ public class AlgoComparison {
 
         AlgorithmResults mStatsAkibaCPP = new AlgorithmResults("akiba-cpp");
         AlgorithmResults mStatsAkiba = new AlgorithmResults("akiba-java");
+        AlgorithmResults mStatsWebGraph = new AlgorithmResults("webgraph");
         AlgorithmResults mStatsSumSweep = new AlgorithmResults("sumsweep"); //  sumsweep = borassi
         AlgorithmResults mStatsNewSumSweep = new AlgorithmResults("newsumsweep");
 
+        Comparator comparator = new Comparator();
         for (String filename : list) {
-            loader.printFilename(filename+ " [akiba-cpp]");
-            AkibaCpp akibaCpp = new AkibaCpp(datasetsPath + filename, runningFromTerminal);
-            mStatsAkibaCPP.add(akibaCpp.getResults());
-            loader.printValues(akibaCpp.getResults());
+            loader.printFilename(filename + " [akiba-cpp]");
+            comparator.setDiameterCalculatorAlgorithm(new AkibaCpp());
+            comparator.setDatasetFile(datasetsPath + filename, runningFromTerminal);
+            comparator.compute();
+            mStatsAkibaCPP.add(comparator.getResults());
+            loader.printValues(comparator.getResults());
 
             loader.printFilename(filename + " [akiba-java]");
-            AkibaJava akibaJava = new AkibaJava(datasetsPath + filename, runningFromTerminal);
-            mStatsAkiba.add(akibaJava.getResults());
-            loader.printValues(akibaJava.getResults());
+            comparator.setDiameterCalculatorAlgorithm(new AkibaJava());
+            comparator.setDatasetFile(datasetsPath + filename, runningFromTerminal);
+            comparator.compute();
+            mStatsAkiba.add(comparator.getResults());
+            loader.printValues(comparator.getResults());
 
-//            loader.printFilename(filename+ " [sumsweep]");
-//            SumSweep sumSweep = new SumSweep(DATASETS_PATH + filename, true);
-//            loader.printValues(sumSweep.getResults());
-//
-//            loader.printFilename(filename+ " [webgraph]");
-//            WebGraph webGraph = new WebGraph(DATASETS_PATH + filename, true);
-//            loader.printValues(webGraph.getResults());
-//
-            loader.printFilename(filename+ " [newsumsweep]");
-            NewSumSweep newSumSweep = new NewSumSweep(datasetsPath + filename, runningFromTerminal);
-            mStatsNewSumSweep.add(newSumSweep.getResults());
-            loader.printValues(newSumSweep.getResults());
+            loader.printFilename(filename + " [webgraph]");
+            comparator.setDiameterCalculatorAlgorithm(new WebGraph());
+            comparator.setDatasetFile(datasetsPath + filename, runningFromTerminal);
+            comparator.compute();
+            mStatsWebGraph.add(comparator.getResults());
+            loader.printValues(comparator.getResults());
+
+            loader.printFilename(filename + " [sumsweep]");
+            comparator.setDiameterCalculatorAlgorithm(new SumSweep());
+            comparator.setDatasetFile(datasetsPath + filename, runningFromTerminal);
+            comparator.compute();
+            mStatsSumSweep.add(comparator.getResults());
+            loader.printValues(comparator.getResults());
+
+            loader.printFilename(filename + " [newsumsweep]");
+            comparator.setDiameterCalculatorAlgorithm(new NewSumSweep());
+            comparator.setDatasetFile(datasetsPath + filename, runningFromTerminal);
+            comparator.compute();
+            mStatsNewSumSweep.add(comparator.getResults());
+            loader.printValues(comparator.getResults());
 
             loader.printEmptyRow();
         }
         LOGGER.info("\n\n");
 
-        List<AlgorithmResults> algorithmsResults = Arrays.asList(mStatsAkibaCPP, mStatsAkiba, mStatsNewSumSweep);
+        List<AlgorithmResults> algorithmsResults = Arrays.asList(mStatsAkibaCPP, mStatsAkiba, mStatsWebGraph, mStatsSumSweep, mStatsNewSumSweep);
         new Chart(algorithmsResults);
     }
 }

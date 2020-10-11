@@ -11,9 +11,7 @@ import java.util.*;
 
 public class GraphDiameter {
 
-//	private static final Logger LOGGER = LoggerFactory.getLogger(GraphDiameter.class);
-
-	private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(AkibaJava.class);
+	private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(GraphDiameter.class);
 
 	private static final int NUM_DEFAULT_DOUBLE_SWEEP = 10;
 	private int nVertices;
@@ -109,10 +107,6 @@ public class GraphDiameter {
 			}
 		}
 		return scc;
-	}
-
-	public int getDiameter(List<Pair<Integer, Integer>> edges) {
-		return getDiameter(edges, NUM_DEFAULT_DOUBLE_SWEEP);
 	}
 
 	public int getDiameter(List<Pair<Integer, Integer>> edges, int numDoubleSweep) {

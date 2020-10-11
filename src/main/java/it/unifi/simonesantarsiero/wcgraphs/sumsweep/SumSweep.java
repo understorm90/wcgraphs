@@ -9,57 +9,51 @@ import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import org.slf4j.LoggerFactory;
 import utilities.Utilities;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
 //rinominato le variabili in java style
 // Replace the synchronized class "Stack" by an unsynchronized one such as "Deque".
 //rimpiazzati i println con i logger
-public class SumSweep implements Algorithm {
+public class SumSweep extends Algorithm {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(SumSweep.class);
 
-    private Map<String, Object> mapResult;
-
     public static void main(String[] args) {
+        Algorithm algorithm = new SumSweep();
+
         if (System.console() != null) {
             if (args.length != 1) {
                 LOGGER.info(USAGE_ERROR_MESSAGE, SumSweep.class.getCanonicalName());
                 return;
             }
-            new SumSweep(args[0], true);
+            algorithm.setDatasetFile(args[0], true);
         } else {
-            new SumSweep("", false);
+            algorithm.setDatasetFile("", false);
         }
+        algorithm.compute();
     }
 
-    public SumSweep(String datasetPath, boolean runningFromTerminal) {
+    @Override
+    public String getFileExtension() {
+        return EXT_GRAPH;
+    }
+
+    @Override
+    public void compute() {
         Utilities.verb = 0;
 
-        String workingDirectory = System.getProperty("user.dir");
-        String datasetsPath;
-        List<String> list;
-
-        if (runningFromTerminal) {
-            datasetsPath = workingDirectory + SLASH;
-
-            list = new ArrayList<>();
-            list.add(datasetPath);
-        } else {
-            datasetsPath = workingDirectory + DATASETS_PATH;
-
-            list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_GRAPH);
-        }
-
-        List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS,VALUE_TIME);
+        List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
         DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
         for (String filename : list) {
             loader.printFilename(filename);
 
             Dir graph = Dir.load(datasetsPath + filename, GraphTypes.ADJLIST, Utilities.loadMethod);
-            graph.transformIntoBiggestWCC();
             int nNodes = graph.getNN();
+            graph.transformIntoBiggestWCC();
             alg.distances.SumSweepDir g = new alg.distances.SumSweepDir(graph);
             g.runAuto();
             double elapsedTime = g.graph.getElapsedTime() / 1000d;
@@ -74,11 +68,6 @@ public class SumSweep implements Algorithm {
             loader.printValues(mapResult);
         }
         LOGGER.info("\n\n");
-    }
-
-    @Override
-    public Map<String, Object> getResults() {
-        return mapResult;
     }
 
     public static void disableLogger() {

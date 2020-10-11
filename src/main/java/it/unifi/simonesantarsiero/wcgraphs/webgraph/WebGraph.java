@@ -9,44 +9,38 @@ import it.unimi.dsi.webgraph.algo.SumSweepDirectedDiameterRadius;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
-public class WebGraph implements Algorithm {
+public class WebGraph extends Algorithm {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(WebGraph.class);
 
-    private Map<String, Object> mapResult;
-
     public static void main(String[] args) {
+        Algorithm algorithm = new WebGraph();
+
         if (System.console() != null) {
             if (args.length != 1) {
                 LOGGER.info(USAGE_ERROR_MESSAGE, WebGraph.class.getCanonicalName());
                 return;
             }
-            new WebGraph(args[0], true);
+            algorithm.setDatasetFile(args[0], true);
         } else {
-            new WebGraph("", false);
+            algorithm.setDatasetFile("", false);
         }
+        algorithm.compute();
     }
 
-    public WebGraph(String datasetPath, boolean runningFromTerminal) {
-        String workingDirectory = System.getProperty("user.dir");
-        String datasetsPath;
-        List<String> list;
+    @Override
+    public String getFileExtension() {
+        return EXT_GRAPH;
+    }
 
-        if (runningFromTerminal) {
-            datasetsPath = workingDirectory + SLASH;
-
-            list = new ArrayList<>();
-            list.add(datasetPath);
-        } else {
-            datasetsPath = workingDirectory + DATASETS_PATH;
-
-            list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_GRAPH);
-        }
-
+    @Override
+    public void compute() {
         List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
         DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
         for (String filename : list) {
@@ -79,11 +73,6 @@ public class WebGraph implements Algorithm {
             }
         }
         LOGGER.info("\n\n");
-    }
-
-    @Override
-    public Map<String, Object> getResults() {
-        return mapResult;
     }
 
     public static void disableLogger() {

@@ -75,7 +75,7 @@ public class Chart extends JFrame {
                 true,
                 false,
                 false
-                );
+        );
 
         XYPlot plot = chart.getXYPlot();
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
@@ -83,6 +83,12 @@ public class Chart extends JFrame {
         renderer.setSeriesStroke(0, new BasicStroke(2.0f));
         renderer.setSeriesPaint(1, Color.BLUE);
         renderer.setSeriesStroke(1, new BasicStroke(2.0f));
+        renderer.setSeriesPaint(2, Color.MAGENTA);
+        renderer.setSeriesStroke(2, new BasicStroke(2.0f));
+        renderer.setSeriesPaint(3, Color.ORANGE);
+        renderer.setSeriesStroke(3, new BasicStroke(2.0f));
+        renderer.setSeriesPaint(4, Color.GREEN);
+        renderer.setSeriesStroke(4, new BasicStroke(2.0f));
         plot.setRenderer(renderer);
 
         //plot.setBackgroundPaint(Color.white);

@@ -8,13 +8,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
-public class AkibaCpp implements Algorithm {
+public class AkibaCpp extends Algorithm {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(AkibaCpp.class);
 
@@ -22,43 +25,45 @@ public class AkibaCpp implements Algorithm {
     private static final String GRAPH_DIAMETER_H = "graph_diameter.h";
     private static final String TEST_EXE = "test";
 
-    private Map<String, Object> mapResult;
+    private String currentPath;
 
     public static void main(String[] args) {
+        Algorithm algorithm = new AkibaCpp();
+
         if (System.console() != null) {
             if (args.length != 1) {
                 LOGGER.info(USAGE_ERROR_MESSAGE, AkibaCpp.class.getCanonicalName());
                 return;
             }
-            new AkibaCpp(args[0], true);
+            algorithm.setDatasetFile(args[0], true);
         } else {
-            new AkibaCpp("", false);
+            algorithm.setDatasetFile("", false);
         }
+        algorithm.compute();
     }
 
-    public AkibaCpp(String path, boolean runningFromTerminal) {
-        String workingDirectory = System.getProperty("user.dir");
-        String currentPath;
-        String datasetsPath;
-        List<String> list;
+    @Override
+    public void setDatasetFile(String datasetFile, boolean runningFromTerminal) {
+        super.setDatasetFile(datasetFile, runningFromTerminal);
 
         if (runningFromTerminal) {
             currentPath = workingDirectory + SLASH;
-            datasetsPath = currentPath;
 
             // copy .CPP and .H files
             copyFileFromResources(workingDirectory, TEST_CPP);
             copyFileFromResources(workingDirectory, GRAPH_DIAMETER_H);
-
-            list = new ArrayList<>();
-            list.add(path);
         } else {
             currentPath = getClass().getResource(SLASH).getPath();
-            datasetsPath = workingDirectory + DATASETS_PATH;
-
-            list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         }
+    }
 
+    @Override
+    public String getFileExtension() {
+        return EXT_TSV;
+    }
+
+    @Override
+    public void compute() {
         List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
         DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
         for (String filename : list) {
@@ -86,14 +91,10 @@ public class AkibaCpp implements Algorithm {
     private void copyFileFromResources(String workingDirectory, String fileName) {
         try (InputStream is = getClass().getResourceAsStream(SLASH + fileName)) {
             Files.copy(is, Paths.get(workingDirectory + SLASH + fileName));
+        } catch (FileAlreadyExistsException e) {
         } catch (IOException e) {
-            LOGGER.error("IOException", e);
+            LOGGER.error("IOException\n", e);
         }
-    }
-
-    @Override
-    public Map<String, Object> getResults() {
-        return mapResult;
     }
 
     public static void disableLogger() {

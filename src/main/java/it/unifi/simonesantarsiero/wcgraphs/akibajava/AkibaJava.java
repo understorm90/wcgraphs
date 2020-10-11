@@ -6,47 +6,41 @@ import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
 //rinominato le variabili in java style
 // Replace the synchronized class "Stack" by an unsynchronized one such as "Deque".
 //rimpiazzati i println con i logger
-public class AkibaJava implements Algorithm {
+public class AkibaJava extends Algorithm {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(AkibaJava.class);
 
-    private Map<String, Object> mapResult;
-
     public static void main(String[] args) {
+        Algorithm algorithm = new AkibaJava();
+
         if (System.console() != null) {
             if (args.length != 1) {
                 LOGGER.info(USAGE_ERROR_MESSAGE, AkibaJava.class.getCanonicalName());
                 return;
             }
-            new AkibaJava(args[0], true);
+            algorithm.setDatasetFile(args[0], true);
         } else {
-            new AkibaJava("", false);
+            algorithm.setDatasetFile("", false);
         }
+        algorithm.compute();
     }
 
-    public AkibaJava(String path, boolean runningFromTerminal) {
-        String workingDirectory = System.getProperty("user.dir");
-        String datasetsPath;
-        List<String> list;
+    @Override
+    public String getFileExtension() {
+        return EXT_TSV;
+    }
 
-        if (runningFromTerminal) {
-            datasetsPath = workingDirectory + SLASH;
-
-            list = new ArrayList<>();
-            list.add(path);
-        } else {
-            datasetsPath = workingDirectory + DATASETS_PATH;
-
-            list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
-        }
-
+    @Override
+    public void compute() {
         List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
         DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
         for (String filename : list) {
@@ -65,11 +59,6 @@ public class AkibaJava implements Algorithm {
             loader.printValues(mapResult);
         }
         LOGGER.info("\n\n");
-    }
-
-    @Override
-    public Map<String, Object> getResults() {
-        return mapResult;
     }
 
     public static void disableLogger() {
