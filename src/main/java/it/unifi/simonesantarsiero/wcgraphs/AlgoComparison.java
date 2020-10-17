@@ -44,7 +44,6 @@ public class AlgoComparison {
         String workingDirectory = System.getProperty("user.dir");
         String datasetsPath = "";
         List<String> list = new ArrayList<>();
-        ;
 
         if (runningFromTerminal) {
             list.add(datasetFile);

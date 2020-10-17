@@ -20,26 +20,29 @@ import java.util.List;
 import java.util.Map;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
-public class Chart extends JFrame {
+public class Chart {
+
+    public static final String WINDOW_TITLE = "Algorithms Comparison";
+    public static final String PANEL_TITLE = "Graphical Representation";
 
     public Chart(List<AlgorithmResults> algorithmsResults) {
-        super("Algorithms Comparison");
+        JFrame frame = new JFrame(WINDOW_TITLE);
 
         XYDataset dataset = createDataset(algorithmsResults);
         JFreeChart chart = createChart(dataset);
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder("Graphical Representation"),
+                BorderFactory.createTitledBorder(PANEL_TITLE),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-        //chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        //chartPanel.setBackground(Color.white);
-        add(chartPanel);
+        chartPanel.setBackground(Color.white);
 
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        frame.add(chartPanel);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     private XYDataset createDataset(List<AlgorithmResults> algorithmsResults) {
@@ -54,7 +57,7 @@ public class Chart extends JFrame {
     private XYSeries createSeries(AlgorithmResults dataset) {
         XYSeries series = new XYSeries(dataset.getAlgorithmName());
         for (int i = 0; i < dataset.size(); i++) {
-            Map<String, Object> result = dataset.get(i); // time e vertices su eclipse
+            Map<String, Object> result = dataset.get(i);
             series.add((Integer) result.get(VALUE_NN), (Double) result.get(VALUE_TIME));
         }
         return series;
@@ -62,9 +65,9 @@ public class Chart extends JFrame {
 
     private JFreeChart createChart(XYDataset dataset) {
 
-        String title = "Comparison between 3 algorithms";
+        String title = "Comparison between " + dataset.getSeriesCount() + " algorithms";
         String xAxisLabel = "n (# vertices)";
-        String yAxisLabel = "time";
+        String yAxisLabel = "time (seconds)";
 
         JFreeChart chart = ChartFactory.createXYLineChart(
                 title,
@@ -76,8 +79,16 @@ public class Chart extends JFrame {
                 false,
                 false
         );
+        chart.getLegend().setFrame(BlockBorder.NONE);
+        chart.setTitle(new TextTitle(title,
+                new Font("Futura", Font.BOLD, 18)
+        ));
 
         XYPlot plot = chart.getXYPlot();
+        plot.setBackgroundPaint(Color.lightGray);
+        plot.setRangeGridlinesVisible(true);
+        plot.setDomainGridlinesVisible(true);
+
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         renderer.setSeriesPaint(0, Color.RED);
         renderer.setSeriesStroke(0, new BasicStroke(2.0f));
@@ -90,15 +101,6 @@ public class Chart extends JFrame {
         renderer.setSeriesPaint(4, Color.GREEN);
         renderer.setSeriesStroke(4, new BasicStroke(2.0f));
         plot.setRenderer(renderer);
-
-        //plot.setBackgroundPaint(Color.white);
-        //plot.setRangeGridlinesVisible(false);
-        //plot.setDomainGridlinesVisible(false);
-
-        chart.getLegend().setFrame(BlockBorder.NONE);
-        chart.setTitle(new TextTitle(title,
-                new Font("Serif", Font.BOLD, 18)
-        ));
 
         return chart;
     }
