@@ -1,10 +1,10 @@
 package it.unifi.simonesantarsiero.wcgraphs.akibacpp;
 
 public class OutputParser {
-    private int diameter;
-    private int nVertices;
-    private int nBFS;
-    private double timeElapsed;
+    private final int diameter;
+    private final int nVertices;
+    private final int nBFS;
+    private final double timeElapsed;
 
     public OutputParser(String data) {
         String[] arrayData = data.split("\n");
