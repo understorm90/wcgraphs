@@ -1,5 +1,6 @@
 package it.unifi.simonesantarsiero.wcgraphs;
 
+import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmEnum;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -108,11 +109,11 @@ public class Chart {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
 
-            AlgorithmResults mStatsAkibaCPP = new AlgorithmResults("akiba-cpp");
+            AlgorithmResults mStatsAkibaCPP = new AlgorithmResults(AlgorithmEnum.AKIBA_CPP.getValue());
             mStatsAkibaCPP.add(getSampleResultsFromDataset("dataset1", 10879, 26, 38, 0.095744));
             mStatsAkibaCPP.add(getSampleResultsFromDataset("dataset2", 8846, 22, 26, 0.054159));
 
-            AlgorithmResults mStatsAkiba = new AlgorithmResults("akiba-java");
+            AlgorithmResults mStatsAkiba = new AlgorithmResults(AlgorithmEnum.AKIBA_JAVA.getValue());
             mStatsAkiba.add(getSampleResultsFromDataset("dataset1", 10879, 26, 118, 0.549));
             mStatsAkiba.add(getSampleResultsFromDataset("dataset2", 8846, 22, 26, 0.11));
 

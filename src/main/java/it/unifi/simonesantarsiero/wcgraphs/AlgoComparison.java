@@ -3,6 +3,8 @@ package it.unifi.simonesantarsiero.wcgraphs;
 import ch.qos.logback.classic.Logger;
 import it.unifi.simonesantarsiero.wcgraphs.akibacpp.AkibaCpp;
 import it.unifi.simonesantarsiero.wcgraphs.akibajava.AkibaJava;
+import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
+import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmEnum;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import it.unifi.simonesantarsiero.wcgraphs.newsumsweep.NewSumSweep;
 import it.unifi.simonesantarsiero.wcgraphs.newsumsweep.NewSumSweepDir;
@@ -10,9 +12,7 @@ import it.unifi.simonesantarsiero.wcgraphs.sumsweep.SumSweep;
 import it.unifi.simonesantarsiero.wcgraphs.webgraph.WebGraph;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
@@ -21,12 +21,7 @@ public class AlgoComparison {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(AlgoComparison.class);
 
     public static void main(String[] args) {
-        AkibaCpp.disableLogger();
-        AkibaJava.disableLogger();
-        SumSweep.disableLogger();
-        WebGraph.disableLogger();
-        NewSumSweep.disableLogger();
-        NewSumSweepDir.disableLogger();
+        disableLogger();
 
         if (System.console() != null) {
             if (args.length != 1) {
@@ -37,6 +32,15 @@ public class AlgoComparison {
         } else {
             new AlgoComparison("", false);
         }
+    }
+
+    private static void disableLogger() {
+        AkibaCpp.disableLogger();
+        AkibaJava.disableLogger();
+        SumSweep.disableLogger();
+        WebGraph.disableLogger();
+        NewSumSweep.disableLogger();
+        NewSumSweepDir.disableLogger();
     }
 
     public AlgoComparison(String datasetFile, boolean runningFromTerminal) {
@@ -54,54 +58,51 @@ public class AlgoComparison {
         List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
         DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
 
-        AlgorithmResults mStatsAkibaCPP = new AlgorithmResults("akiba-cpp");
-        AlgorithmResults mStatsAkiba = new AlgorithmResults("akiba-java");
-        AlgorithmResults mStatsWebGraph = new AlgorithmResults("webgraph");
-        AlgorithmResults mStatsSumSweep = new AlgorithmResults("sumsweep"); //  sumsweep = borassi
-        AlgorithmResults mStatsNewSumSweep = new AlgorithmResults("newsumsweep");
+        Map<String, AlgorithmResults> algorithmResultsMap = new HashMap<>();
+        List<AlgorithmEnum> algorithmEnumsList = Arrays.asList(AlgorithmEnum.values());
+        algorithmEnumsList.forEach(algorithm -> {
+            algorithmResultsMap.put(algorithm.getValue(), new AlgorithmResults(algorithm.getValue()));
+        });
 
         Comparator comparator = new Comparator();
         for (String filename : list) {
-            loader.printFilename(filename + " [akiba-cpp]");
-            comparator.setDiameterCalculatorAlgorithm(new AkibaCpp());
-            comparator.setDatasetFile(datasetsPath + filename, runningFromTerminal);
-            comparator.compute();
-            mStatsAkibaCPP.add(comparator.getResults());
-            loader.printValues(comparator.getResults());
-
-            loader.printFilename(filename + " [akiba-java]");
-            comparator.setDiameterCalculatorAlgorithm(new AkibaJava());
-            comparator.setDatasetFile(datasetsPath + filename, runningFromTerminal);
-            comparator.compute();
-            mStatsAkiba.add(comparator.getResults());
-            loader.printValues(comparator.getResults());
-
-            loader.printFilename(filename + " [webgraph]");
-            comparator.setDiameterCalculatorAlgorithm(new WebGraph());
-            comparator.setDatasetFile(datasetsPath + filename, runningFromTerminal);
-            comparator.compute();
-            mStatsWebGraph.add(comparator.getResults());
-            loader.printValues(comparator.getResults());
-
-            loader.printFilename(filename + " [sumsweep]");
-            comparator.setDiameterCalculatorAlgorithm(new SumSweep());
-            comparator.setDatasetFile(datasetsPath + filename, runningFromTerminal);
-            comparator.compute();
-            mStatsSumSweep.add(comparator.getResults());
-            loader.printValues(comparator.getResults());
-
-            loader.printFilename(filename + " [newsumsweep]");
-            comparator.setDiameterCalculatorAlgorithm(new NewSumSweep());
-            comparator.setDatasetFile(datasetsPath + filename, runningFromTerminal);
-            comparator.compute();
-            mStatsNewSumSweep.add(comparator.getResults());
-            loader.printValues(comparator.getResults());
-
+            for (AlgorithmEnum algorithmEnum : algorithmEnumsList) {
+                loader.printFilename(filename + " [" + algorithmEnum.getValue() + "]");
+                Algorithm algo = getAlgorithm(algorithmEnum);
+                comparator.setDiameterCalculatorAlgorithm(algo);
+                comparator.setDatasetFile(datasetsPath + filename, runningFromTerminal);
+                comparator.compute();
+                algorithmResultsMap.get(algorithmEnum.getValue()).add(comparator.getResults());
+                loader.printValues(comparator.getResults());
+            }
             loader.printEmptyRow();
         }
         LOGGER.info("\n\n");
 
-        List<AlgorithmResults> algorithmsResults = Arrays.asList(mStatsAkibaCPP, mStatsAkiba, mStatsWebGraph, mStatsSumSweep, mStatsNewSumSweep);
-        new Chart(algorithmsResults);
+        new Chart(new ArrayList<>(algorithmResultsMap.values()));
+    }
+
+    private Algorithm getAlgorithm(AlgorithmEnum algorithmEnum) {
+        Algorithm algorithm;
+        switch (algorithmEnum) {
+            case AKIBA_CPP:
+                algorithm = new AkibaCpp();
+                break;
+            case AKIBA_JAVA:
+                algorithm = new AkibaJava();
+                break;
+            case WEBGRAPH:
+                algorithm = new WebGraph();
+                break;
+            case SUMSWEEP:
+                algorithm = new SumSweep();
+                break;
+            case NEWSUMSWEEP:
+                algorithm = new NewSumSweep();
+                break;
+            default:
+                algorithm = null;
+        }
+        return algorithm;
     }
 }
