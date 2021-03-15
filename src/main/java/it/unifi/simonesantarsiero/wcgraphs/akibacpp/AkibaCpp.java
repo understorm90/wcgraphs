@@ -6,9 +6,7 @@ import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -91,9 +89,8 @@ public class AkibaCpp extends Algorithm {
     private void copyFileFromResources(String workingDirectory, String fileName) {
         try (InputStream is = getClass().getResourceAsStream(SLASH + fileName)) {
             Files.copy(is, Paths.get(workingDirectory + SLASH + fileName));
-        } catch (FileAlreadyExistsException e) {
-        } catch (IOException e) {
-            LOGGER.error("IOException\n", e);
+        } catch (Exception e) {
+            LOGGER.error("Exception\n", e);
         }
     }
 

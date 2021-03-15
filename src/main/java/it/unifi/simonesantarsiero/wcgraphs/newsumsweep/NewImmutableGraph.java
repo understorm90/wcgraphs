@@ -209,9 +209,7 @@ public class NewImmutableGraph {
 
 		//findWCC
 		ImmutableGraph symGraph = Transform.symmetrize(graph);
-		//FIXME provo a mettere un ProgressLogger a null per non stampare niente
-		//NewImmutableGraph.getLargestComponent(symGraph, 0, new ProgressLogger());
-		NewImmutableGraph.getLargestComponent(symGraph, 0, null);
+		NewImmutableGraph.getLargestComponent(symGraph, 0, null); // mettere new ProgressLogger() per stampare
 
 		NewImmutableGraph.storeGraphFile(graph, basename, NewImmutableGraph.map);
 		NewImmutableGraph.convertAsciiToWebgraph(basename);

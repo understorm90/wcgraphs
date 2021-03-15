@@ -60,9 +60,7 @@ public class AlgoComparison {
 
         Map<String, AlgorithmResults> algorithmResultsMap = new HashMap<>();
         List<AlgorithmEnum> algorithmEnumsList = Arrays.asList(AlgorithmEnum.values());
-        algorithmEnumsList.forEach(algorithm -> {
-            algorithmResultsMap.put(algorithm.getValue(), new AlgorithmResults(algorithm.getValue()));
-        });
+        algorithmEnumsList.forEach(algorithm -> algorithmResultsMap.put(algorithm.getValue(), new AlgorithmResults(algorithm.getValue())));
 
         Comparator comparator = new Comparator();
         for (String filename : list) {
