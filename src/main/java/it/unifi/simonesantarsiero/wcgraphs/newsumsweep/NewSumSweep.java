@@ -2,14 +2,11 @@ package it.unifi.simonesantarsiero.wcgraphs.newsumsweep;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import com.martiansoftware.jsap.JSAPException;
 import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import it.unimi.dsi.webgraph.ImmutableGraph;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -71,8 +68,8 @@ public class NewSumSweep extends Algorithm {
 
                 loader.printValues(mapResult);
 
-            } catch (IOException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException | InstantiationException | JSAPException e) {
-                LOGGER.error("IOException", e);
+            } catch (Exception e) {
+                LOGGER.error("Exception", e);
             }
         }
         LOGGER.info("\n\n");

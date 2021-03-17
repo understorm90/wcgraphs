@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
 import it.unimi.dsi.logging.ProgressLogger;
 import it.unimi.dsi.webgraph.*;
 import it.unimi.dsi.webgraph.algo.ParallelBreadthFirstVisit;
+import visit.VisitBFS;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -263,7 +264,6 @@ public class NewImmutableGraph {
 	 * @param visit a class containing all routines used by the BFS.
 	 */
 	public static void performBFS(ImmutableGraph g, VisitBFS visit) {
-
 		LazyIntIterator iter;
 
 		int v;
@@ -288,7 +288,6 @@ public class NewImmutableGraph {
 	}
 
 	public static void performBFSGivenQ(ImmutableGraph g, VisitBFS visit) {
-
 		LazyIntIterator iter;
 
 		int v;
@@ -312,11 +311,9 @@ public class NewImmutableGraph {
 
 	public static void performBBFSGivenQ(ImmutableGraph revG, VisitBFS visit) {
 		performBFSGivenQ(revG, visit);
-
 	}
 
 	public static void performBBFS(ImmutableGraph revgraph, VisitBFS visit) {
 		performBFS(revgraph, visit);
-
 	}
 }

@@ -2,17 +2,21 @@ package it.unifi.simonesantarsiero.wcgraphs.newsumsweep;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import it.unimi.dsi.webgraph.algo.StronglyConnectedComponents;
-import org.slf4j.LoggerFactory;
 import com.martiansoftware.jsap.JSAPException;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.webgraph.ImmutableGraph;
 import it.unimi.dsi.webgraph.LazyIntIterator;
 import it.unimi.dsi.webgraph.Transform;
+import it.unimi.dsi.webgraph.algo.StronglyConnectedComponents;
+import org.slf4j.LoggerFactory;
+import visit.ConnBFS;
+import visit.Dist;
+import visit.DistWithSCC;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.DecimalFormat;
+import java.util.Arrays;
 
 /**
  * This class implements the directed SumSweep algorithm, as explained in the article
@@ -552,6 +556,7 @@ public class NewSumSweepDir {
 
 	/**
 	 * Upper bounds the eccentricity of all pivot vertices
+	 *
 	 * @param visitDistF
 	 * @param visitDistB
 	 * @param visitInSCCF
@@ -560,7 +565,7 @@ public class NewSumSweepDir {
 	 * @return an array containing in position 2*i an upper bound on the forward eccentricity of the pivot of the SCC i,
 	 * in position 2*i+1 an upper bound on the backward eccentricity of the same pivot.
 	 */
-	private int[] findEccPivot(Dist visitDistF, Dist visitDistB, DistMultipleInSCC visitInSCCF, DistMultipleInSCC visitInSCCB, int[] pivot){
+	private int[] findEccPivot(Dist visitDistF, Dist visitDistB, NewDistMultipleInSCC visitInSCCF, NewDistMultipleInSCC visitInSCCB, int[] pivot) {
 
 		int[] ecc = new int[2 * sccDag.numNodes()];
 		int[] eccFalse = new int[2 * sccDag.numNodes()];
@@ -673,9 +678,9 @@ public class NewSumSweepDir {
 
 		printVisitData(visitDistF, visitDistB);
 
-		DistMultipleInSCC visitInSCCF = new DistMultipleInSCC(graph.numNodes(), mScc);
+		NewDistMultipleInSCC visitInSCCF = new NewDistMultipleInSCC(graph.numNodes(), mScc);
 		visitInSCCF.run(graph, revgraph, pivot, start, visitDistF.eccInSCC, true);
-		DistMultipleInSCC visitInSCCB = new DistMultipleInSCC(graph.numNodes(), mScc);
+		NewDistMultipleInSCC visitInSCCB = new NewDistMultipleInSCC(graph.numNodes(), mScc);
 		visitInSCCB.run(graph, revgraph, pivot, start, visitDistB.eccInSCC, false);
 
 		int[] eccPivot = findEccPivot(visitDistF, visitDistB, visitInSCCF, visitInSCCB, pivot);
@@ -798,7 +803,7 @@ public class NewSumSweepDir {
 	 */
 	public void run(int start, int initialSumSweepIter) {
 
-		int v = start;
+		int v;
 		int w1;
 		int w2;
 		int i;
@@ -835,9 +840,10 @@ public class NewSumSweepDir {
 			if (iterD != -1 && iterR != -1) {
 				break;
 			}
-			DecimalFormat df = new DecimalFormat("0.00");
-			LOGGER.trace("BFS {}: {} {} {} {} {}. ", iter, df.format(points[0]), df.format(points[1]), df.format(points[2]), df.format(points[3]), df.format(points[4]));
-
+			if (LOGGER.isTraceEnabled()) {
+				DecimalFormat df = new DecimalFormat("0.00");
+				LOGGER.trace("BFS {}: {} {} {} {} {}. ", iter, df.format(points[0]), df.format(points[1]), df.format(points[2]), df.format(points[3]), df.format(points[4]));
+			}
 
 			if (iterD != -1) {
 				points[0] = -100;
