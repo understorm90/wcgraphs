@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 public class GraphDiameter {
@@ -18,13 +17,6 @@ public class GraphDiameter {
 	private int diameter;
 	private int numBFS;
 	private long time;
-
-	public GraphDiameter() {
-		nVertices = 0;
-		diameter = 0;
-		numBFS = 0;
-		time = 0;
-	}
 
 	private long getTime() {
 		return System.currentTimeMillis();
@@ -57,154 +49,172 @@ public class GraphDiameter {
 		Deque<Pair<Integer, Integer>> dfs = new ArrayDeque<>();
 
 		for (int i = 0; i < nVertices; i++) {
-			if (ord[i] != -1) {
-				continue;
-			}
 
-			dfs.push(new Pair<>(i, -1));
+			if (ord[i] == -1) {
 
-			while (!dfs.isEmpty()) {
-				int v = dfs.peek().getFirst();
-				int index = dfs.peek().getSecond();
+				dfs.push(new Pair<>(i, -1));
 
-				dfs.pop();
+				while (!dfs.isEmpty()) {
+					int v = dfs.peek().getFirst();
+					int index = dfs.peek().getSecond();
 
-				if (index == -1) {
-					numVisit++;
-					ord[v] = numVisit;
-					low[v] = numVisit;
-					s.push(v);
-					in[v] = true;
-				} else {
-					low[v] = Math.min(low[v], low[graph.get(v).get(index)]);
-				}
+					dfs.pop();
 
-				for (index++; index < graph.get(v).size(); index++) {
-					int w = graph.get(v).get(index);
-
-					if (ord[w] == -1) {
-						dfs.push(new Pair<>(v, index));
-						dfs.push(new Pair<>(w, -1));
-						break;
-					} else if (in[w]) {
-						low[v] = Math.min(low[v], ord[w]);
+					if (index == -1) {
+						numVisit++;
+						ord[v] = numVisit;
+						low[v] = numVisit;
+						s.push(v);
+						in[v] = true;
+					} else {
+						low[v] = Math.min(low[v], low[graph.get(v).get(index)]);
 					}
-				}
 
-				if (index == graph.get(v).size() && low[v] == ord[v]) {
+					for (index++; index < graph.get(v).size(); index++) {
+						int w = graph.get(v).get(index);
 
-					int w;
-					do {
-						w = s.peek();
+						if (ord[w] == -1) {
+							dfs.push(new Pair<>(v, index));
+							dfs.push(new Pair<>(w, -1));
+							break;
+						} else if (in[w]) {
+							low[v] = Math.min(low[v], ord[w]);
+						}
+					}
 
-						s.pop();
-						in[w] = false;
-						scc[w] = numScc;
-					} while (v != w);
+					if (index == graph.get(v).size() && low[v] == ord[v]) {
 
-					numScc++;
+						int w;
+						do {
+							w = s.peek();
+
+							s.pop();
+							in[w] = false;
+							scc[w] = numScc;
+						} while (v != w);
+
+						numScc++;
+					}
 				}
 			}
 		}
 		return scc;
 	}
 
-	public int getDiameter(List<Pair<Integer, Integer>> edges, int numDoubleSweep) {
-		// Prepare the adjacency list
-		// LinkedList<Integer> graph[];  non è type-safe quando vado a fare la new
-		ArrayList<LinkedList<Integer>> graph; // array di linkedlist
-		ArrayList<LinkedList<Integer>> rgraph;
-
-		// serve per trovare quanti vertici ha il grafo, per poi dimensionare graph e rgraph
+	// serve per trovare quanti vertici ha il grafo, per poi dimensionare graph e rgraph
+	private int getNumVerticesFromListOfEdges(List<Pair<Integer, Integer>> edges) {
+		int vertices = 0;
 		for (Pair<Integer, Integer> edge : edges) {
 			int from = edge.getFirst();
 			int to = edge.getSecond();
 
-			nVertices = Math.max(nVertices, from + 1);
-			nVertices = Math.max(nVertices, to + 1);
+			vertices = Math.max(vertices, from + 1);
+			vertices = Math.max(vertices, to + 1);
 		}
+		return vertices;
+	}
 
-		// resize
-		graph = new ArrayList<>(nVertices);
+	private ArrayList<LinkedList<Integer>> resize(int nVertices) {
+		ArrayList<LinkedList<Integer>> graph = new ArrayList<>(nVertices);
 		for (int i = 0; i < nVertices; i++) {
 			graph.add(new LinkedList<>());
 		}
-		rgraph =  new ArrayList<>(nVertices);
-		for (int i = 0; i < nVertices; i++) {
-			rgraph.add(new LinkedList<>());
+		return graph;
+	}
+
+	private int calculateUpperBound(List<Pair<Integer, Integer>> neighbors, int nVertices, int diameter) {
+		int ub = 0;
+		int j = 0;
+
+		while (j < neighbors.size()) {
+			int component = neighbors.get(j).getFirst();
+			int lb = nVertices;
+
+			while (j < neighbors.size() && neighbors.get(j).getFirst() == component) {
+				lb = Math.min(lb, neighbors.get(j).getSecond());
+				j++;
+			}
+
+			ub = Math.max(ub, lb);
+
+			if (ub > diameter) {
+				return ub;
+			}
 		}
+		return ub;
+	}
 
-		for (Pair<Integer, Integer> edge : edges) {
-			int from = edge.getFirst();
-			int to = edge.getSecond();
-
-			graph.get(from).add(to);
-			rgraph.get(to).add(from);
-		}
-
-		// Decompose the graph into strongly connected components
-		time = -getTime();
-		int []scc = getSCC(graph);
-
-		// Compute the diameter lower bound by the double sweep algorithm
+	private int bfs(ArrayList<LinkedList<Integer>> graphOrReversedGraph, int start, int[] dist, int[] queue) {
 		int qs;
 		int qt;
-		int []dist = new int[nVertices];
-		int []queue = new int[nVertices];
-		for(int i = 0; i < nVertices; i++) {
-			dist[i] = -1;
-			queue[i] = -1;
-		}
 
+		qs = qt = 0;
+		dist[start] = 0;
+		queue[qt++] = start;
+
+		while (qs < qt) {
+			int v = queue[qs++];
+
+			for (int j = 0; j < graphOrReversedGraph.get(v).size(); j++) {
+				if (dist[graphOrReversedGraph.get(v).get(j)] < 0) {
+					dist[graphOrReversedGraph.get(v).get(j)] = dist[v] + 1;
+					queue[qt++] = graphOrReversedGraph.get(v).get(j);
+				}
+			}
+		}
+		return qt;
+	}
+
+	private int bfsWithScc(ArrayList<LinkedList<Integer>> rgraph, int start, int[] dist, int[] queue, int[] scc, int[] ecc) {
+		int qt;
+		int qs;
+
+		qs = qt = 0;
+		dist[start] = 0;
+		queue[qt++] = start;
+
+		while (qs < qt) {
+			int v = queue[qs++];
+
+			ecc[v] = Math.min(ecc[v], dist[v] + ecc[start]);
+
+			for (int j = 0; j < rgraph.get(v).size(); j++) {
+				// only inside an SCC
+				if (dist[rgraph.get(v).get(j)] < 0 && scc[rgraph.get(v).get(j)] == scc[start]) {
+					dist[rgraph.get(v).get(j)] = dist[v] + 1;
+					queue[qt++] = rgraph.get(v).get(j);
+				}
+			}
+		}
+		return qt;
+	}
+
+	private void cleanDistArray(int qt, int[] dist, int[] queue) {
+		for (int j = 0; j < qt; j++) {
+			dist[queue[j]] = -1;
+		}
+	}
+
+	private void doubleSweep(int numDoubleSweep, ArrayList<LinkedList<Integer>> graph, ArrayList<LinkedList<Integer>> rgraph, int[] dist, int[] queue) {
+		int qt;
 		for (int i = 0; i < numDoubleSweep; i++) {
-			int start = getRandom(); // random selected vertex v
 
 			// forward BFS
-			qs = qt = 0;
-			dist[start] = 0;
-			queue[qt++] = start;
+			qt = bfs(graph, getRandom(), dist, queue); // random selected vertex v
 
-			while (qs < qt) {
-				int v = queue[qs++];
-
-				for (int j = 0; j < graph.get(v).size(); j++) {
-					if (dist[graph.get(v).get(j)] < 0) {
-						dist[graph.get(v).get(j)] = dist[v] + 1;
-						queue[qt++] = graph.get(v).get(j);
-					}
-				}
-			}
-
-			for (int j = 0; j < qt; j++) {
-				dist[queue[j]] = -1;
-			}
+			cleanDistArray(qt, dist, queue);
 
 			// backward BFS
-			start = queue[qt - 1];
-			qs = qt = 0;
-			dist[start] = 0;
-			queue[qt++] = start;
-
-			while (qs < qt) {
-				int v = queue[qs++];
-
-				for (int j = 0; j < rgraph.get(v).size(); j++) {
-					if (dist[rgraph.get(v).get(j)] < 0) {
-						dist[rgraph.get(v).get(j)] = dist[v] + 1;
-						queue[qt++] = rgraph.get(v).get(j);
-					}
-				}
-			}
+			qt = bfs(rgraph, queue[qt - 1], dist, queue);
 
 			diameter = Math.max(diameter, dist[queue[qt - 1]]);
 
-			for (int j = 0; j < qt; j++) {
-				dist[queue[j]] = -1;
-			}
+			cleanDistArray(qt, dist, queue);
 
 		}
+	}
 
-		// Order vertices
+	private ArrayList<Pair<Long, Integer>> getOrderedVertices(ArrayList<LinkedList<Integer>> graph, ArrayList<LinkedList<Integer>> rgraph, int[] scc) {
 		ArrayList<Pair<Long, Integer>> order = new ArrayList<>(Collections.nCopies(nVertices, new Pair<>((long) -1, -1)));
 
 		for (int v = 0; v < nVertices; v++) {
@@ -230,100 +240,86 @@ public class GraphDiameter {
 		}
 
 		Collections.sort(order);
+		return order;
+	}
+
+	public int getDiameter(List<Pair<Integer, Integer>> edges, int numDoubleSweep) {
+		// Prepare the adjacency list
+		// LinkedList<Integer> graph[];  non è type-safe quando vado a fare la new
+		ArrayList<LinkedList<Integer>> graph;
+		ArrayList<LinkedList<Integer>> rgraph;
+
+		nVertices = getNumVerticesFromListOfEdges(edges);
+		graph = resize(nVertices);
+		rgraph = resize(nVertices);
+
+		for (Pair<Integer, Integer> edge : edges) {
+			int from = edge.getFirst();
+			int to = edge.getSecond();
+
+			graph.get(from).add(to);
+			rgraph.get(to).add(from);
+		}
+
+		// Decompose the graph into strongly connected components
+		time = -getTime();
+		int[] scc = getSCC(graph);
+
+		// Compute the diameter lower bound by the double sweep algorithm
+		int qt;
+		int[] dist = new int[nVertices];
+		int[] queue = new int[nVertices];
+		for (int i = 0; i < nVertices; i++) {
+			dist[i] = -1;
+			queue[i] = -1;
+		}
+
+		doubleSweep(numDoubleSweep, graph, rgraph, dist, queue);
+
+		// Order vertices
+		ArrayList<Pair<Long, Integer>> order = getOrderedVertices(graph, rgraph, scc);
 
 		// Examine every vertex
-		int []ecc = new int[nVertices];
-		for(int i = 0; i < nVertices; i++) {
+		int[] ecc = new int[nVertices];
+		for (int i = 0; i < nVertices; i++) {
 			ecc[i] = nVertices;
 		}
 
 		for (int i = 0; i < nVertices; i++) {
 			int u = order.get(i).getSecond();
 
-			if (ecc[u] <= diameter) {
-				continue;
-			}
+			if (ecc[u] > diameter) {
 
-			// Refine the eccentricity upper bound
-			int ub = 0;
-			ArrayList<Pair<Integer, Integer>> neighbors = new ArrayList<>();
+				// Refine the eccentricity upper bound
+				ArrayList<Pair<Integer, Integer>> neighbors = new ArrayList<>();
 
-			for (int j = 0; j < graph.get(u).size(); j++) {
-				Pair<Integer, Integer> p = new Pair<>(scc[graph.get(u).get(j)], ecc[graph.get(u).get(j)] + 1);
-				neighbors.add(p);
-			}
-
-			Collections.sort(neighbors);
-
-			for (int j = 0; j < neighbors.size(); ) {
-				int component = neighbors.get(j).getFirst();
-				int lb = nVertices;
-
-				for (; j < neighbors.size(); j++) {
-					if (neighbors.get(j).getFirst() != component) {
-						break;
-					}
-					lb = Math.min(lb, neighbors.get(j).getSecond());
+				for (int j = 0; j < graph.get(u).size(); j++) {
+					Pair<Integer, Integer> p = new Pair<>(scc[graph.get(u).get(j)], ecc[graph.get(u).get(j)] + 1);
+					neighbors.add(p);
 				}
 
-				ub = Math.max(ub, lb);
+				Collections.sort(neighbors);
 
-				if (ub > diameter) {
-					break;
+				int ub = calculateUpperBound(neighbors, nVertices, diameter);
+
+				if (ub <= diameter) {
+					ecc[u] = ub;
+				} else {
+					// Conduct a BFS and update bounds
+					numBFS++;
+
+					qt = bfs(graph, u, dist, queue);
+
+					ecc[u] = dist[queue[qt - 1]];
+					diameter = Math.max(diameter, ecc[u]);
+
+					cleanDistArray(qt, dist, queue);
+
+					qt = bfsWithScc(rgraph, u, dist, queue, scc, ecc);
+
+					cleanDistArray(qt, dist, queue);
 				}
 			}
-
-			if (ub <= diameter) {
-				ecc[u] = ub;
-				continue;
-			}
-
-			// Conduct a BFS and update bounds
-			numBFS++;
-			qs = qt = 0;
-			dist[u] = 0;
-			queue[qt++] = u;
-
-			while (qs < qt) {
-				int v = queue[qs++];
-
-				for (int j = 0; j < graph.get(v).size(); j++) {
-					if (dist[graph.get(v).get(j)] < 0) {
-						dist[graph.get(v).get(j)] = dist[v] + 1;
-						queue[qt++] = graph.get(v).get(j);
-					}
-				}
-			}
-
-			ecc[u] = dist[queue[qt - 1]];
-			diameter = Math.max(diameter, ecc[u]);
-
-			for (int j = 0; j < qt; j++) {
-				dist[queue[j]] = -1;
-			}
-
-			qs = qt = 0;
-			dist[u] = 0;
-			queue[qt++] = u;
-
-			while (qs < qt) {
-				int v = queue[qs++];
-
-				ecc[v] = Math.min(ecc[v], dist[v] + ecc[u]);
-
-				for (int j = 0; j < rgraph.get(v).size(); j++) {
-					// only inside an SCC
-					if (dist[rgraph.get(v).get(j)] < 0 && scc[rgraph.get(v).get(j)] == scc[u]) {
-						dist[rgraph.get(v).get(j)] = dist[v] + 1;
-						queue[qt++] = rgraph.get(v).get(j);
-					}
-				}
-			}
-
-			for (int j = 0; j < qt; j++) {
-				dist[queue[j]] = -1;
-			}
-
 		}
 
 		time += getTime();
@@ -350,8 +346,8 @@ public class GraphDiameter {
 			}
 			return getDiameter(edges, numDoubleSweep);
 
-		} catch (IOException e) {
-			LOGGER.error("IOException", e);
+		} catch (Exception e) {
+			LOGGER.error("Exception", e);
 		}
 		return -1;
 	}

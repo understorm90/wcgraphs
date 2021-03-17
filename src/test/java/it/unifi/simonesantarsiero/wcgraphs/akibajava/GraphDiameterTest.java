@@ -5,15 +5,12 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
+import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.EXT_TSV;
+import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.SLASH;
 
 public class GraphDiameterTest {
-
-    private Map<String, Object> mapResult;
 
     private String getDatasetsPathFromResource() {
         ClassLoader classLoader = getClass().getClassLoader();
@@ -30,12 +27,6 @@ public class GraphDiameterTest {
         System.out.println(filename);
 
         int diameter = sut.getDiameter(datasetsPath + filename + EXT_TSV);
-        mapResult = new HashMap<>();
-        mapResult.put(VALUE_DATASET, filename);
-        mapResult.put(VALUE_NN, sut.getNumVertices());
-        mapResult.put(VALUE_DIAMETER, diameter);
-        mapResult.put(VALUE_NUM_OF_BFS, sut.getNumBFS());
-        mapResult.put(VALUE_TIME, sut.getTimeElapsed());
 
         Assert.assertEquals("p2p-Gnutella04", filename);
         Assert.assertEquals(10879, sut.getNumVertices());
@@ -52,12 +43,6 @@ public class GraphDiameterTest {
         System.out.println(filename);
 
         int diameter = sut.getDiameter(datasetsPath + filename + EXT_TSV);
-        mapResult = new HashMap<>();
-        mapResult.put(VALUE_DATASET, filename);
-        mapResult.put(VALUE_NN, sut.getNumVertices());
-        mapResult.put(VALUE_DIAMETER, diameter);
-        mapResult.put(VALUE_NUM_OF_BFS, sut.getNumBFS());
-        mapResult.put(VALUE_TIME, sut.getTimeElapsed());
 
         Assert.assertEquals("p2p-Gnutella05", filename);
         Assert.assertEquals(8846, sut.getNumVertices());
@@ -74,12 +59,6 @@ public class GraphDiameterTest {
         System.out.println(filename);
 
         int diameter = sut.getDiameter(datasetsPath + filename + EXT_TSV);
-        mapResult = new HashMap<>();
-        mapResult.put(VALUE_DATASET, filename);
-        mapResult.put(VALUE_NN, sut.getNumVertices());
-        mapResult.put(VALUE_DIAMETER, diameter);
-        mapResult.put(VALUE_NUM_OF_BFS, sut.getNumBFS());
-        mapResult.put(VALUE_TIME, sut.getTimeElapsed());
 
         Assert.assertEquals("wiki-Vote", filename);
         Assert.assertEquals(8295, sut.getNumVertices());
