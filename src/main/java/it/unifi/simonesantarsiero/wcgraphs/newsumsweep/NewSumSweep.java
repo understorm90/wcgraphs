@@ -2,7 +2,7 @@ package it.unifi.simonesantarsiero.wcgraphs.newsumsweep;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
+import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmStrategy;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import it.unimi.dsi.webgraph.ImmutableGraph;
 import org.slf4j.LoggerFactory;
@@ -13,14 +13,14 @@ import java.util.List;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
-public class NewSumSweep extends Algorithm {
+public class NewSumSweep extends AlgorithmStrategy {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(NewSumSweep.class);
 
     public static void main(String[] args) {
         NewSumSweepDir.disableLogger();
 
-        Algorithm algorithm = new NewSumSweep();
+        AlgorithmStrategy algorithm = new NewSumSweep();
 
         if (System.console() != null) {
             if (args.length != 1) {
@@ -35,7 +35,7 @@ public class NewSumSweep extends Algorithm {
     }
 
     @Override
-    public String getFileExtension() {
+    public String getDatasetFileExtension() {
         return EXT_GRAPH;
     }
 
@@ -75,7 +75,9 @@ public class NewSumSweep extends Algorithm {
         LOGGER.info("\n\n");
     }
 
-    public static void disableLogger() {
+    @Override
+    public void disableLogger() {
         LOGGER.setLevel(Level.toLevel("error"));
+        NewSumSweepDir.disableLogger();
     }
 }

@@ -1,14 +1,14 @@
 package it.unifi.simonesantarsiero.wcgraphs;
 
-import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
+import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmStrategy;
 
 import java.util.Map;
 
 public class Comparator {
 
-    private Algorithm diameterCalculatorAlgorithm;
+    private AlgorithmStrategy diameterCalculatorAlgorithm;
 
-    public void setDiameterCalculatorAlgorithm(Algorithm diameterCalculatorAlgorithm) {
+    public void setAlgorithm(AlgorithmStrategy diameterCalculatorAlgorithm) {
         this.diameterCalculatorAlgorithm = diameterCalculatorAlgorithm;
     }
 
@@ -22,5 +22,9 @@ public class Comparator {
 
     public Map<String, Object> getResults() {
         return diameterCalculatorAlgorithm.getResults();
+    }
+
+    public void disableLogger() {
+        diameterCalculatorAlgorithm.disableLogger();
     }
 }

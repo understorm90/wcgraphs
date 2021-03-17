@@ -8,7 +8,7 @@ import java.util.Map;
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.DATASETS_PATH;
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.SLASH;
 
-public abstract class Algorithm {
+public abstract class AlgorithmStrategy {
     protected Map<String, Object> mapResult;
     protected final List<String> list = new ArrayList<>();
     protected String datasetsPath;
@@ -17,8 +17,8 @@ public abstract class Algorithm {
     public void setDatasetFile(String datasetFile, boolean runningFromTerminal) {
         datasetsPath = runningFromTerminal ? workingDirectory + SLASH : workingDirectory + DATASETS_PATH;
 
-        if (datasetFile.equals("")) {
-            list.addAll(DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, getFileExtension()));
+        if ("".equals(datasetFile)) {
+            list.addAll(DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, getDatasetFileExtension()));
         } else {
             list.add(datasetFile);
         }
@@ -28,7 +28,9 @@ public abstract class Algorithm {
         return Collections.unmodifiableMap(mapResult);
     }
 
-    public abstract String getFileExtension();
+    public abstract String getDatasetFileExtension();
 
     public abstract void compute();
+
+    public abstract void disableLogger();
 }

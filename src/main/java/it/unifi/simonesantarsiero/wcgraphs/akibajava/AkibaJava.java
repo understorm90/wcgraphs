@@ -2,7 +2,7 @@ package it.unifi.simonesantarsiero.wcgraphs.akibajava;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
+import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmStrategy;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import org.slf4j.LoggerFactory;
 
@@ -15,12 +15,12 @@ import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 //rinominato le variabili in java style
 // Replace the synchronized class "Stack" by an unsynchronized one such as "Deque".
 //rimpiazzati i println con i logger
-public class AkibaJava extends Algorithm {
+public class AkibaJava extends AlgorithmStrategy {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(AkibaJava.class);
 
     public static void main(String[] args) {
-        Algorithm algorithm = new AkibaJava();
+        AlgorithmStrategy algorithm = new AkibaJava();
 
         if (System.console() != null) {
             if (args.length != 1) {
@@ -35,7 +35,7 @@ public class AkibaJava extends Algorithm {
     }
 
     @Override
-    public String getFileExtension() {
+    public String getDatasetFileExtension() {
         return EXT_TSV;
     }
 
@@ -61,7 +61,8 @@ public class AkibaJava extends Algorithm {
         LOGGER.info("\n\n");
     }
 
-    public static void disableLogger() {
+    @Override
+    public void disableLogger() {
         LOGGER.setLevel(Level.toLevel("error"));
     }
 }

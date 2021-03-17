@@ -4,7 +4,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import graph.Dir;
 import graph.GraphTypes;
-import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
+import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmStrategy;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import org.slf4j.LoggerFactory;
 import utilities.Utilities;
@@ -18,12 +18,12 @@ import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 //rinominato le variabili in java style
 // Replace the synchronized class "Stack" by an unsynchronized one such as "Deque".
 //rimpiazzati i println con i logger
-public class SumSweep extends Algorithm {
+public class SumSweep extends AlgorithmStrategy {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(SumSweep.class);
 
     public static void main(String[] args) {
-        Algorithm algorithm = new SumSweep();
+        AlgorithmStrategy algorithm = new SumSweep();
 
         if (System.console() != null) {
             if (args.length != 1) {
@@ -38,7 +38,7 @@ public class SumSweep extends Algorithm {
     }
 
     @Override
-    public String getFileExtension() {
+    public String getDatasetFileExtension() {
         return EXT_GRAPH;
     }
 
@@ -70,7 +70,8 @@ public class SumSweep extends Algorithm {
         LOGGER.info("\n\n");
     }
 
-    public static void disableLogger() {
+    @Override
+    public void disableLogger() {
         LOGGER.setLevel(Level.toLevel("error"));
     }
 }

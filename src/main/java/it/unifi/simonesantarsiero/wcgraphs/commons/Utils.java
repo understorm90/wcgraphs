@@ -3,7 +3,6 @@ package it.unifi.simonesantarsiero.wcgraphs.commons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.Properties;
 
 public class Utils {
@@ -44,8 +43,8 @@ public class Utils {
         Properties properties = new Properties();
         try {
             properties.load(Utils.class.getClassLoader().getResourceAsStream("wcgraphs.properties"));
-        } catch (IOException e) {
-            LOGGER.error("IOException: ", e);
+        } catch (Exception e) {
+            LOGGER.error("Exception: ", e);
         }
         return properties.getProperty(propertyName);
     }

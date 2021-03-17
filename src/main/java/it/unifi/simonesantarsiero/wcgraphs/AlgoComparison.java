@@ -3,11 +3,10 @@ package it.unifi.simonesantarsiero.wcgraphs;
 import ch.qos.logback.classic.Logger;
 import it.unifi.simonesantarsiero.wcgraphs.akibacpp.AkibaCpp;
 import it.unifi.simonesantarsiero.wcgraphs.akibajava.AkibaJava;
-import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
 import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmEnum;
+import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmStrategy;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import it.unifi.simonesantarsiero.wcgraphs.newsumsweep.NewSumSweep;
-import it.unifi.simonesantarsiero.wcgraphs.newsumsweep.NewSumSweepDir;
 import it.unifi.simonesantarsiero.wcgraphs.sumsweep.SumSweep;
 import it.unifi.simonesantarsiero.wcgraphs.webgraph.WebGraph;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,6 @@ public class AlgoComparison {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(AlgoComparison.class);
 
     public static void main(String[] args) {
-        disableLogger();
 
         if (System.console() != null) {
             if (args.length != 1) {
@@ -32,15 +30,6 @@ public class AlgoComparison {
         } else {
             new AlgoComparison("", false);
         }
-    }
-
-    private static void disableLogger() {
-        AkibaCpp.disableLogger();
-        AkibaJava.disableLogger();
-        SumSweep.disableLogger();
-        WebGraph.disableLogger();
-        NewSumSweep.disableLogger();
-        NewSumSweepDir.disableLogger();
     }
 
     public AlgoComparison(String datasetFile, boolean runningFromTerminal) {
@@ -66,8 +55,8 @@ public class AlgoComparison {
         for (String filename : list) {
             for (AlgorithmEnum algorithmEnum : algorithmEnumsList) {
                 loader.printFilename(filename + " [" + algorithmEnum.getValue() + "]");
-                Algorithm algo = getAlgorithm(algorithmEnum);
-                comparator.setDiameterCalculatorAlgorithm(algo);
+                comparator.setAlgorithm(getAlgorithm(algorithmEnum));
+                comparator.disableLogger();
                 comparator.setDatasetFile(datasetsPath + filename, runningFromTerminal);
                 comparator.compute();
                 algorithmResultsMap.get(algorithmEnum.getValue()).add(comparator.getResults());
@@ -80,8 +69,8 @@ public class AlgoComparison {
         new Chart(new ArrayList<>(algorithmResultsMap.values()));
     }
 
-    private Algorithm getAlgorithm(AlgorithmEnum algorithmEnum) {
-        Algorithm algorithm;
+    private AlgorithmStrategy getAlgorithm(AlgorithmEnum algorithmEnum) {
+        AlgorithmStrategy algorithm;
         switch (algorithmEnum) {
             case AKIBA_CPP:
                 algorithm = new AkibaCpp();
@@ -96,10 +85,8 @@ public class AlgoComparison {
                 algorithm = new SumSweep();
                 break;
             case NEWSUMSWEEP:
-                algorithm = new NewSumSweep();
-                break;
             default:
-                algorithm = null;
+                algorithm = new NewSumSweep();
         }
         return algorithm;
     }

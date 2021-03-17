@@ -2,7 +2,7 @@ package it.unifi.simonesantarsiero.wcgraphs.akibacpp;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
+import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmStrategy;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ import java.util.List;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
-public class AkibaCpp extends Algorithm {
+public class AkibaCpp extends AlgorithmStrategy {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(AkibaCpp.class);
 
@@ -26,7 +26,7 @@ public class AkibaCpp extends Algorithm {
     private String currentPath;
 
     public static void main(String[] args) {
-        Algorithm algorithm = new AkibaCpp();
+        AlgorithmStrategy algorithm = new AkibaCpp();
 
         if (System.console() != null) {
             if (args.length != 1) {
@@ -56,7 +56,7 @@ public class AkibaCpp extends Algorithm {
     }
 
     @Override
-    public String getFileExtension() {
+    public String getDatasetFileExtension() {
         return EXT_TSV;
     }
 
@@ -94,7 +94,8 @@ public class AkibaCpp extends Algorithm {
         }
     }
 
-    public static void disableLogger() {
+    @Override
+    public void disableLogger() {
         LOGGER.setLevel(Level.toLevel("error"));
     }
 }

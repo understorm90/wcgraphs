@@ -33,11 +33,11 @@ public class AkibaJavaTest {
 
     @Test
     public void testAkibaJava() {
-        AkibaJava.disableLogger();
         String datasetsPath = getDatasetsPathFromResource();
         List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(0);
         AkibaJava sut = new AkibaJava();
+        sut.disableLogger();
         sut.setDatasetFile(filename, false);
 
         sut.compute();
@@ -51,11 +51,11 @@ public class AkibaJavaTest {
 
     @Test
     public void testAkibaJava_p2p_Gnutella05() {
-        AkibaJava.disableLogger();
         String datasetsPath = getDatasetsPathFromResource();
         List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(1);
         AkibaJava sut = new AkibaJava();
+        sut.disableLogger();
         sut.setDatasetFile(filename, false);
 
         sut.compute();

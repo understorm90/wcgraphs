@@ -2,25 +2,24 @@ package it.unifi.simonesantarsiero.wcgraphs.webgraph;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import it.unifi.simonesantarsiero.wcgraphs.commons.Algorithm;
+import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmStrategy;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import it.unimi.dsi.webgraph.ImmutableGraph;
 import it.unimi.dsi.webgraph.algo.SumSweepDirectedDiameterRadius;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
-public class WebGraph extends Algorithm {
+public class WebGraph extends AlgorithmStrategy {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(WebGraph.class);
 
     public static void main(String[] args) {
-        Algorithm algorithm = new WebGraph();
+        AlgorithmStrategy algorithm = new WebGraph();
 
         if (System.console() != null) {
             if (args.length != 1) {
@@ -35,7 +34,7 @@ public class WebGraph extends Algorithm {
     }
 
     @Override
-    public String getFileExtension() {
+    public String getDatasetFileExtension() {
         return EXT_GRAPH;
     }
 
@@ -68,14 +67,15 @@ public class WebGraph extends Algorithm {
 
                 loader.printValues(mapResult);
 
-            } catch (IOException e) {
-                LOGGER.error("IOException", e);
+            } catch (Exception e) {
+                LOGGER.error("Exception", e);
             }
         }
         LOGGER.info("\n\n");
     }
 
-    public static void disableLogger() {
+    @Override
+    public void disableLogger() {
         LOGGER.setLevel(Level.toLevel("error"));
     }
 }
