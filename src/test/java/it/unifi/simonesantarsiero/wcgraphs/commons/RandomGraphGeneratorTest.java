@@ -10,18 +10,31 @@ public class RandomGraphGeneratorTest {
 
     private RandomGraphGenerator sut;
 
+    private void logResults(String filename, int nVertices, int mEdges, double density) {
+        String separator = "\t";
+        LOGGER.info(filename + separator);
+        LOGGER.info("nVertices: {}{}", nVertices, separator);
+        LOGGER.info("mEdges: {}{}", mEdges, separator);
+        LOGGER.info("Density (edges/vertices): {}{}\n", density, separator);
+    }
+
     @Test
-    public void testRandomGraphGenerator() {
-
+    public void testRandomGraphGenerator_3vertices() {
         sut = new RandomGraphGenerator(3);
+        logResults(sut.writeToFileTSV(), sut.getVertices(), sut.getEdges(), sut.getDensity());
 
-        Assert.assertEquals(3, sut.getVertices());
         int nVerticesSquared = sut.getVertices() * sut.getVertices();
+        Assert.assertEquals(3, sut.getVertices());
         Assert.assertTrue("Number of edges (" + sut.getEdges() + ") should be less than vertices^2 (" + nVerticesSquared + ")", sut.getEdges() < nVerticesSquared);
-        LOGGER.info("nVertices: {}\n", sut.getVertices());
-        LOGGER.info("mEdges: {}\n", sut.getEdges());
-        LOGGER.info("Density (edges/vertices): {}\n\n", sut.getDensity());
-        LOGGER.info("{}", sut);
-        sut.writeToFileTSV("random-graph_" + sut.getVertices() + "_" + sut.getEdges());
+    }
+
+    @Test
+    public void testRandomGraphGenerator_4vertices() {
+        sut = new RandomGraphGenerator(4);
+        logResults(sut.writeToFileTSV(), sut.getVertices(), sut.getEdges(), sut.getDensity());
+
+        int nVerticesSquared = sut.getVertices() * sut.getVertices();
+        Assert.assertEquals(4, sut.getVertices());
+        Assert.assertTrue("Number of edges (" + sut.getEdges() + ") should be less than vertices^2 (" + nVerticesSquared + ")", sut.getEdges() < nVerticesSquared);
     }
 }
