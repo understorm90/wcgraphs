@@ -1,6 +1,5 @@
 package it.unifi.simonesantarsiero.wcgraphs.newsumsweep;
 
-import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,14 +15,14 @@ public class NewSumSweepTest {
     private String getDatasetsPathFromResource() {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("DATASETS/test/").getFile());
-        return file.getAbsolutePath() + SLASH;
+        return file.getAbsolutePath() + FILE_SEPARATOR;
     }
 
     @Test
     public void testDatasetFiles() {
         String datasetsPath = getDatasetsPathFromResource();
 
-        List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
 
         Assert.assertEquals(3, list.size());
         Assert.assertTrue(list.contains("p2p-Gnutella04"));
@@ -34,7 +33,7 @@ public class NewSumSweepTest {
     @Test
     public void testNewSumSweep() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(0);
         NewSumSweep sut = new NewSumSweep();
         sut.disableLogger();
@@ -52,7 +51,7 @@ public class NewSumSweepTest {
     @Test
     public void testNewSumSweep_p2p_Gnutella04() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(0);
         NewSumSweep sut = new NewSumSweep();
         sut.disableLogger();
@@ -70,7 +69,7 @@ public class NewSumSweepTest {
     @Test
     public void testNewSumSweep_p2p_Gnutella05() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(1);
         NewSumSweep sut = new NewSumSweep();
         sut.disableLogger();
@@ -88,7 +87,7 @@ public class NewSumSweepTest {
     @Test
     public void testNewSumSweep_wiki_Vote() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(2);
         NewSumSweep sut = new NewSumSweep();
         sut.disableLogger();

@@ -45,13 +45,13 @@ public class AkibaCpp extends AlgorithmStrategy {
         super.setDatasetFile(datasetFile, runningFromTerminal);
 
         if (runningFromTerminal) {
-            currentPath = workingDirectory + SLASH;
+            currentPath = workingDirectory + FILE_SEPARATOR;
 
             // copy .CPP and .H files
             copyFileFromResources(workingDirectory, TEST_CPP);
             copyFileFromResources(workingDirectory, GRAPH_DIAMETER_H);
         } else {
-            currentPath = getClass().getResource(SLASH).getPath();
+            currentPath = getClass().getResource(FILE_SEPARATOR).getPath();
         }
     }
 
@@ -87,8 +87,8 @@ public class AkibaCpp extends AlgorithmStrategy {
     }
 
     private void copyFileFromResources(String workingDirectory, String fileName) {
-        try (InputStream is = getClass().getResourceAsStream(SLASH + fileName)) {
-            Files.copy(is, Paths.get(workingDirectory + SLASH + fileName));
+        try (InputStream is = getClass().getResourceAsStream(FILE_SEPARATOR + fileName)) {
+            Files.copy(is, Paths.get(workingDirectory + FILE_SEPARATOR + fileName));
         } catch (Exception e) {
             LOGGER.error("Exception\n", e);
         }

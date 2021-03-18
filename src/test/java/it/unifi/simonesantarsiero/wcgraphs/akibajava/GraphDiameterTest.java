@@ -1,27 +1,26 @@
 package it.unifi.simonesantarsiero.wcgraphs.akibajava;
 
-import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
+import it.unifi.simonesantarsiero.wcgraphs.commons.RandomGraphGenerator;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.List;
 
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.EXT_TSV;
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.SLASH;
+import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
 public class GraphDiameterTest {
 
     private String getDatasetsPathFromResource() {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("DATASETS/test/").getFile());
-        return file.getAbsolutePath() + SLASH;
+        return file.getAbsolutePath() + FILE_SEPARATOR;
     }
 
     @Test
     public void testGraphDiameter_p2pGnutella04() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(0);
         GraphDiameter sut = new GraphDiameter();
         System.out.println(filename);
@@ -37,7 +36,7 @@ public class GraphDiameterTest {
     @Test
     public void testGraphDiameter_p2pGnutella05() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(1);
         GraphDiameter sut = new GraphDiameter();
         System.out.println(filename);
@@ -53,7 +52,7 @@ public class GraphDiameterTest {
     @Test
     public void testGraphDiameter_wikiVote() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(2);
         GraphDiameter sut = new GraphDiameter();
         System.out.println(filename);
@@ -64,5 +63,14 @@ public class GraphDiameterTest {
         Assert.assertEquals(8295, sut.getNumVertices());
         Assert.assertEquals(10, diameter);
         Assert.assertEquals(3, sut.getNumBFS());
+    }
+
+    @Test
+    public void testGraphDiameter_randomGraph() {
+        RandomGraphGenerator randomGraphGenerator = new RandomGraphGenerator(3);
+        String randomGraphFilename = randomGraphGenerator.writeToFileTSV();
+        GraphDiameter sut = new GraphDiameter();
+        int diameter = sut.getDiameter(randomGraphFilename);
+        System.out.println(diameter);
     }
 }

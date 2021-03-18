@@ -41,7 +41,7 @@ public class AlgoComparison {
         if (runningFromTerminal) {
             list.add(datasetFile);
         } else {
-            list.addAll(DatasetLogger.getListOfGraphsAvailableInDirectory(workingDirectory + DATASETS_PATH, EXT_TSV));
+            list.addAll(getListOfGraphsAvailableInDirectory(workingDirectory + DATASETS_PATH, EXT_TSV));
         }
 
         List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);

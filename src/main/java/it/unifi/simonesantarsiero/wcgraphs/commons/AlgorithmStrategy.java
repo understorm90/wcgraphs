@@ -5,8 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.DATASETS_PATH;
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.SLASH;
+import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
 public abstract class AlgorithmStrategy {
     protected Map<String, Object> mapResult;
@@ -15,10 +14,10 @@ public abstract class AlgorithmStrategy {
     protected final String workingDirectory = System.getProperty("user.dir");
 
     public void setDatasetFile(String datasetFile, boolean runningFromTerminal) {
-        datasetsPath = runningFromTerminal ? workingDirectory + SLASH : workingDirectory + DATASETS_PATH;
+        datasetsPath = runningFromTerminal ? workingDirectory + FILE_SEPARATOR : workingDirectory + DATASETS_PATH;
 
         if ("".equals(datasetFile)) {
-            list.addAll(DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, getDatasetFileExtension()));
+            list.addAll(getListOfGraphsAvailableInDirectory(datasetsPath, getDatasetFileExtension()));
         } else {
             list.add(datasetFile);
         }

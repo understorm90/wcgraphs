@@ -2,6 +2,7 @@ package it.unifi.simonesantarsiero.wcgraphs.webgraph;
 
 import ch.qos.logback.classic.Logger;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
+import it.unifi.simonesantarsiero.wcgraphs.commons.Utils;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class WebGraphDecoderTest {
     public void testWebGraphDecoder() {
         String workingDirectory = System.getProperty("user.dir");
         String datasetsPath = workingDirectory + DATASETS_PATH;
-        List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_GRAPH);
+        List<String> list = Utils.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_GRAPH);
 
         List<String> headersList = Collections.emptyList();
         DatasetLogger loader = new DatasetLogger(headersList, LOGGER);

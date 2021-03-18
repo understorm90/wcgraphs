@@ -4,9 +4,6 @@ import ch.qos.logback.classic.Logger;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.apache.commons.lang.StringUtils;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -84,22 +81,5 @@ public class DatasetLogger {
         for (int i = 0; i < headers.size(); i++) {
             printValue(" ", false);
         }
-    }
-
-    public static List<String> getListOfGraphsAvailableInDirectory(String path, String fileExtension) {
-        File folder = new File(path);
-        File[] listOfFiles = folder.listFiles();
-        ArrayList<String> listOfGraphs = new ArrayList<>();
-        if (listOfFiles != null) {
-            for (File listOfFile : listOfFiles) {
-                if (listOfFile.isFile() && listOfFile.getName().endsWith(fileExtension)) {
-                    String fileName = listOfFile.getName();
-                    listOfGraphs.add(fileName.substring(0, fileName.length() - fileExtension.length()));
-                }
-            }
-            Collections.sort(listOfGraphs);
-            return listOfGraphs;
-        }
-        return Collections.emptyList();
     }
 }

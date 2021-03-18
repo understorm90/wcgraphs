@@ -1,6 +1,5 @@
 package it.unifi.simonesantarsiero.wcgraphs.akibajava;
 
-import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,14 +15,14 @@ public class AkibaJavaTest {
     private String getDatasetsPathFromResource() {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("DATASETS/test/").getFile());
-        return file.getAbsolutePath() + SLASH;
+        return file.getAbsolutePath() + FILE_SEPARATOR;
     }
 
     @Test
     public void testDatasetFiles() {
         String datasetsPath = getDatasetsPathFromResource();
 
-        List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
 
         Assert.assertEquals(3, list.size());
         Assert.assertTrue(list.contains("p2p-Gnutella04"));
@@ -34,7 +33,7 @@ public class AkibaJavaTest {
     @Test
     public void testAkibaJava() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(0);
         AkibaJava sut = new AkibaJava();
         sut.disableLogger();
@@ -52,7 +51,7 @@ public class AkibaJavaTest {
     @Test
     public void testAkibaJava_p2p_Gnutella05() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = DatasetLogger.getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(1);
         AkibaJava sut = new AkibaJava();
         sut.disableLogger();
