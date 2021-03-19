@@ -26,9 +26,9 @@ public class AlgoComparison {
                 LOGGER.info(USAGE_ERROR_MESSAGE, AlgoComparison.class.getCanonicalName());
                 return;
             }
-            new AlgoComparison(args[0], true);
+            new AlgoComparison(args[0]);
         } else {
-            new AlgoComparison("", false);
+            new AlgoComparison("");
         }
     }
 
@@ -37,15 +37,13 @@ public class AlgoComparison {
         return split[split.length - 1];
     }
 
-    public AlgoComparison(String datasetFile, boolean runningFromTerminal) {
+    public AlgoComparison(String datasetFile) {
 
-        String workingDirectory = System.getProperty("user.dir");
         List<String> list = new ArrayList<>();
-
-        if (runningFromTerminal) {
-            list.add(datasetFile);
+        if ("".equals(datasetFile)) {
+            list.addAll(getPathsOfGraphsAvailableInDirectory(System.getProperty("user.dir") + FILE_SEPARATOR + DATASETS_PATH, EXT_TSV));
         } else {
-            list.addAll(getPathsOfGraphsAvailableInDirectory(workingDirectory + FILE_SEPARATOR + DATASETS_PATH, EXT_TSV));
+            list.add(datasetFile);
         }
 
         List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);

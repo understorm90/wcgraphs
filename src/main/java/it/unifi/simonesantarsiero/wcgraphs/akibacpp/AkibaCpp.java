@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
@@ -61,12 +60,7 @@ public class AkibaCpp extends AlgorithmStrategy {
             String output = TerminalUtils.exeCommand(currentPath + TEST_EXE + " " + filename + EXT_TSV);
             OutputParser parser = new OutputParser(output);
 
-            mapResult = new HashMap<>();
-            mapResult.put(VALUE_DATASET, graphName);
-            mapResult.put(VALUE_NN, parser.getVertices());
-            mapResult.put(VALUE_DIAMETER, parser.getDiameter());
-            mapResult.put(VALUE_NUM_OF_BFS, parser.getBFS());
-            mapResult.put(VALUE_TIME, parser.getTime());
+            setResults(graphName, parser.getVertices(), parser.getDiameter(), parser.getBFS(), parser.getTime());
 
             loader.printValues(mapResult);
         }

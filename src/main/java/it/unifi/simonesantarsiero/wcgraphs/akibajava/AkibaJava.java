@@ -7,7 +7,6 @@ import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
@@ -50,12 +49,7 @@ public class AkibaJava extends AlgorithmStrategy {
             GraphDiameter gd = new GraphDiameter();
             int diameter = gd.getDiameter(filename + EXT_TSV);
 
-            mapResult = new HashMap<>();
-            mapResult.put(VALUE_DATASET, graphName);
-            mapResult.put(VALUE_NN, gd.getNumVertices());
-            mapResult.put(VALUE_DIAMETER, diameter);
-            mapResult.put(VALUE_NUM_OF_BFS, gd.getNumBFS());
-            mapResult.put(VALUE_TIME, gd.getTimeElapsed());
+            setResults(graphName, gd.getNumVertices(), diameter, gd.getNumBFS(), gd.getTimeElapsed());
 
             loader.printValues(mapResult);
         }

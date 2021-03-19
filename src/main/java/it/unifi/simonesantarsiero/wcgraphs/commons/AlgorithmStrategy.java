@@ -1,9 +1,6 @@
 package it.unifi.simonesantarsiero.wcgraphs.commons;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
@@ -23,6 +20,15 @@ public abstract class AlgorithmStrategy {
     public String getGraphName(String filename) {
         String[] split = filename.split(FILE_SEPARATOR);
         return split[split.length - 1];
+    }
+
+    public void setResults(String datasetName, int nVertices, int diameter, int nBFSs, double elapsedTime) {
+        mapResult = new HashMap<>();
+        mapResult.put(VALUE_DATASET, datasetName);
+        mapResult.put(VALUE_NN, nVertices);
+        mapResult.put(VALUE_DIAMETER, diameter);
+        mapResult.put(VALUE_NUM_OF_BFS, nBFSs);
+        mapResult.put(VALUE_TIME, elapsedTime);
     }
 
     public final Map<String, Object> getResults() {

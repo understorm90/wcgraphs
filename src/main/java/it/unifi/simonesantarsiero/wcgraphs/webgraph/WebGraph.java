@@ -9,7 +9,6 @@ import it.unimi.dsi.webgraph.algo.SumSweepDirectedDiameterRadius;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
@@ -43,7 +42,8 @@ public class WebGraph extends AlgorithmStrategy {
         List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
         DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
         for (String filename : list) {
-            loader.printFilename(filename);
+            String graphName = getGraphName(filename);
+            loader.printFilename(graphName);
 
             ImmutableGraph graph;
             try {
@@ -56,14 +56,7 @@ public class WebGraph extends AlgorithmStrategy {
 
                 time += System.currentTimeMillis();
 
-                mapResult = new HashMap<>();
-                mapResult.put(VALUE_DATASET, getGraphName(filename));
-                mapResult.put(VALUE_NN, graph.numNodes());
-                mapResult.put("arcs", graph.numArcs());
-                mapResult.put(VALUE_DIAMETER, ss.getDiameter());
-                mapResult.put(VALUE_NUM_OF_BFS, ss.getDiameterIterations());
-                mapResult.put("radius", ss.getRadius());
-                mapResult.put(VALUE_TIME, time / 1000d);
+                setResults(graphName, graph.numNodes(), ss.getDiameter(), ss.getDiameterIterations(), time / 1000d);
 
                 loader.printValues(mapResult);
 

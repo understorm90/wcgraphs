@@ -8,7 +8,6 @@ import it.unimi.dsi.webgraph.ImmutableGraph;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
@@ -58,14 +57,7 @@ public class NewSumSweep extends AlgorithmStrategy {
 
                 time += System.currentTimeMillis();
 
-                mapResult = new HashMap<>();
-                mapResult.put(VALUE_DATASET, graphName);
-                mapResult.put(VALUE_NN, graph.numNodes());
-                mapResult.put("arcs", graph.numArcs());
-                mapResult.put(VALUE_DIAMETER, nss.getD());
-                mapResult.put(VALUE_NUM_OF_BFS, nss.getIterD());
-                mapResult.put("radius", nss.getR());
-                mapResult.put(VALUE_TIME, time / 1000d);
+                setResults(graphName, graph.numNodes(), nss.getD(), nss.getIterD(), time / 1000d);
 
                 loader.printValues(mapResult);
 

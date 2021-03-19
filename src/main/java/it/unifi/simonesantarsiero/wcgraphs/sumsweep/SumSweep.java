@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import utilities.Utilities;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
@@ -49,7 +48,8 @@ public class SumSweep extends AlgorithmStrategy {
         List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
         DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
         for (String filename : list) {
-            loader.printFilename(filename);
+            String graphName = getGraphName(filename);
+            loader.printFilename(graphName);
 
             Dir graph = Dir.load(filename, GraphTypes.ADJLIST, Utilities.loadMethod);
             int nNodes = graph.getNN();
@@ -58,12 +58,7 @@ public class SumSweep extends AlgorithmStrategy {
             g.runAuto();
             double elapsedTime = g.graph.getElapsedTime() / 1000d;
 
-            mapResult = new HashMap<>();
-            mapResult.put(VALUE_DATASET, getGraphName(filename));
-            mapResult.put(VALUE_NN, nNodes);
-            mapResult.put(VALUE_DIAMETER, g.getD());
-            mapResult.put(VALUE_NUM_OF_BFS, g.getIterD());
-            mapResult.put(VALUE_TIME, elapsedTime);
+            setResults(graphName, nNodes, g.getD(), g.getIterD(), elapsedTime);
 
             loader.printValues(mapResult);
         }
