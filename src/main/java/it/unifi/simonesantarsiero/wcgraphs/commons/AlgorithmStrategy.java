@@ -10,17 +10,19 @@ import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 public abstract class AlgorithmStrategy {
     protected Map<String, Object> mapResult;
     protected final List<String> list = new ArrayList<>();
-    protected String datasetsPath;
     protected final String workingDirectory = System.getProperty("user.dir");
 
-    public void setDatasetFile(String datasetFile, boolean runningFromTerminal) {
-        datasetsPath = runningFromTerminal ? workingDirectory + FILE_SEPARATOR : workingDirectory + DATASETS_PATH;
+    public void setDatasetFile(String datasetFile) {
+        list.add(datasetFile);
+    }
 
-        if ("".equals(datasetFile)) {
-            list.addAll(getListOfGraphsAvailableInDirectory(datasetsPath, getDatasetFileExtension()));
-        } else {
-            list.add(datasetFile);
-        }
+    public void setDatasetsFromSNAP() {
+        list.addAll(getPathsOfGraphsAvailableInDirectory(workingDirectory + FILE_SEPARATOR + DATASETS_PATH, getDatasetFileExtension()));
+    }
+
+    public String getGraphName(String filename) {
+        String[] split = filename.split(FILE_SEPARATOR);
+        return split[split.length - 1];
     }
 
     public final Map<String, Object> getResults() {

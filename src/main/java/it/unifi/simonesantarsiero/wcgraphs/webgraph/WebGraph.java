@@ -26,9 +26,9 @@ public class WebGraph extends AlgorithmStrategy {
                 LOGGER.info(USAGE_ERROR_MESSAGE, WebGraph.class.getCanonicalName());
                 return;
             }
-            algorithm.setDatasetFile(args[0], true);
+            algorithm.setDatasetFile(args[0]);
         } else {
-            algorithm.setDatasetFile("", false);
+            algorithm.setDatasetsFromSNAP();
         }
         algorithm.compute();
     }
@@ -47,7 +47,7 @@ public class WebGraph extends AlgorithmStrategy {
 
             ImmutableGraph graph;
             try {
-                graph = ImmutableGraph.load(datasetsPath + filename);
+                graph = ImmutableGraph.load(filename);
 
                 long time = -System.currentTimeMillis();
 
@@ -57,7 +57,7 @@ public class WebGraph extends AlgorithmStrategy {
                 time += System.currentTimeMillis();
 
                 mapResult = new HashMap<>();
-                mapResult.put(VALUE_DATASET, filename);
+                mapResult.put(VALUE_DATASET, getGraphName(filename));
                 mapResult.put(VALUE_NN, graph.numNodes());
                 mapResult.put("arcs", graph.numArcs());
                 mapResult.put(VALUE_DIAMETER, ss.getDiameter());

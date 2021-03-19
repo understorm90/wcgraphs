@@ -30,9 +30,9 @@ public class SumSweep extends AlgorithmStrategy {
                 LOGGER.info(USAGE_ERROR_MESSAGE, SumSweep.class.getCanonicalName());
                 return;
             }
-            algorithm.setDatasetFile(args[0], true);
+            algorithm.setDatasetFile(args[0]);
         } else {
-            algorithm.setDatasetFile("", false);
+            algorithm.setDatasetsFromSNAP();
         }
         algorithm.compute();
     }
@@ -51,7 +51,7 @@ public class SumSweep extends AlgorithmStrategy {
         for (String filename : list) {
             loader.printFilename(filename);
 
-            Dir graph = Dir.load(datasetsPath + filename, GraphTypes.ADJLIST, Utilities.loadMethod);
+            Dir graph = Dir.load(filename, GraphTypes.ADJLIST, Utilities.loadMethod);
             int nNodes = graph.getNN();
             graph.transformIntoBiggestWCC();
             alg.distances.SumSweepDir g = new alg.distances.SumSweepDir(graph);
@@ -59,7 +59,7 @@ public class SumSweep extends AlgorithmStrategy {
             double elapsedTime = g.graph.getElapsedTime() / 1000d;
 
             mapResult = new HashMap<>();
-            mapResult.put(VALUE_DATASET, filename);
+            mapResult.put(VALUE_DATASET, getGraphName(filename));
             mapResult.put(VALUE_NN, nNodes);
             mapResult.put(VALUE_DIAMETER, g.getD());
             mapResult.put(VALUE_NUM_OF_BFS, g.getIterD());

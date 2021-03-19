@@ -54,15 +54,15 @@ public class Utils {
         return properties.getProperty(propertyName);
     }
 
-    public static List<String> getListOfGraphsAvailableInDirectory(String path, String fileExtension) {
-        File folder = new File(path);
+    public static List<String> getPathsOfGraphsAvailableInDirectory(String dir, String fileExtension) {
+        File folder = new File(dir);
         File[] listOfFiles = folder.listFiles();
         ArrayList<String> listOfGraphs = new ArrayList<>();
         if (listOfFiles != null) {
             for (File listOfFile : listOfFiles) {
                 if (listOfFile.isFile() && listOfFile.getName().endsWith(fileExtension)) {
                     String fileName = listOfFile.getName();
-                    listOfGraphs.add(fileName.substring(0, fileName.length() - fileExtension.length()));
+                    listOfGraphs.add(dir + fileName.substring(0, fileName.length() - fileExtension.length()));
                 }
             }
             Collections.sort(listOfGraphs);

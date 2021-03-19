@@ -6,6 +6,7 @@ import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmStrategy;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,8 +24,6 @@ public class AkibaCpp extends AlgorithmStrategy {
     private static final String GRAPH_DIAMETER_H = "graph_diameter.h";
     private static final String TEST_EXE = "test";
 
-    private String currentPath;
-
     public static void main(String[] args) {
         AlgorithmStrategy algorithm = new AkibaCpp();
 
@@ -33,26 +32,11 @@ public class AkibaCpp extends AlgorithmStrategy {
                 LOGGER.info(USAGE_ERROR_MESSAGE, AkibaCpp.class.getCanonicalName());
                 return;
             }
-            algorithm.setDatasetFile(args[0], true);
+            algorithm.setDatasetFile(args[0]);
         } else {
-            algorithm.setDatasetFile("", false);
+            algorithm.setDatasetsFromSNAP();
         }
         algorithm.compute();
-    }
-
-    @Override
-    public void setDatasetFile(String datasetFile, boolean runningFromTerminal) {
-        super.setDatasetFile(datasetFile, runningFromTerminal);
-
-        if (runningFromTerminal) {
-            currentPath = workingDirectory + FILE_SEPARATOR;
-
-            // copy .CPP and .H files
-            copyFileFromResources(workingDirectory, TEST_CPP);
-            copyFileFromResources(workingDirectory, GRAPH_DIAMETER_H);
-        } else {
-            currentPath = getClass().getResource(FILE_SEPARATOR).getPath();
-        }
     }
 
     @Override
@@ -62,20 +46,23 @@ public class AkibaCpp extends AlgorithmStrategy {
 
     @Override
     public void compute() {
+        String currentPath = prepareFilesToExecute();
+
         List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
         DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
         for (String filename : list) {
-            loader.printFilename(filename);
+            String graphName = getGraphName(filename);
+            loader.printFilename(graphName);
 
             // COMPILE
             TerminalUtils.exeCommand("gcc -lstdc++ " + currentPath + TEST_CPP + " -o " + currentPath + TEST_EXE);
 
             // RUN
-            String output = TerminalUtils.exeCommand(currentPath + TEST_EXE + " " + datasetsPath + filename + EXT_TSV);
+            String output = TerminalUtils.exeCommand(currentPath + TEST_EXE + " " + filename + EXT_TSV);
             OutputParser parser = new OutputParser(output);
 
             mapResult = new HashMap<>();
-            mapResult.put(VALUE_DATASET, filename);
+            mapResult.put(VALUE_DATASET, graphName);
             mapResult.put(VALUE_NN, parser.getVertices());
             mapResult.put(VALUE_DIAMETER, parser.getDiameter());
             mapResult.put(VALUE_NUM_OF_BFS, parser.getBFS());
@@ -86,7 +73,25 @@ public class AkibaCpp extends AlgorithmStrategy {
         LOGGER.info("\n\n");
     }
 
+    private String prepareFilesToExecute() {
+        String currentPath;
+
+        if (System.console() != null) {
+            currentPath = workingDirectory + FILE_SEPARATOR;
+
+            // copy .CPP and .H files
+            copyFileFromResources(workingDirectory, TEST_CPP);
+            copyFileFromResources(workingDirectory, GRAPH_DIAMETER_H);
+        } else {
+            currentPath = getClass().getResource(FILE_SEPARATOR).getPath();
+        }
+        return currentPath;
+    }
+
     private void copyFileFromResources(String workingDirectory, String fileName) {
+        if (new File(workingDirectory + FILE_SEPARATOR + fileName).isFile()) {
+            return;
+        }
         try (InputStream is = getClass().getResourceAsStream(FILE_SEPARATOR + fileName)) {
             Files.copy(is, Paths.get(workingDirectory + FILE_SEPARATOR + fileName));
         } catch (Exception e) {

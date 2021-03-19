@@ -32,16 +32,20 @@ public class AlgoComparison {
         }
     }
 
+    public String getGraphName(String filename) {
+        String[] split = filename.split(FILE_SEPARATOR);
+        return split[split.length - 1];
+    }
+
     public AlgoComparison(String datasetFile, boolean runningFromTerminal) {
 
         String workingDirectory = System.getProperty("user.dir");
-        String datasetsPath = "";
         List<String> list = new ArrayList<>();
 
         if (runningFromTerminal) {
             list.add(datasetFile);
         } else {
-            list.addAll(getListOfGraphsAvailableInDirectory(workingDirectory + DATASETS_PATH, EXT_TSV));
+            list.addAll(getPathsOfGraphsAvailableInDirectory(workingDirectory + FILE_SEPARATOR + DATASETS_PATH, EXT_TSV));
         }
 
         List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
@@ -54,10 +58,10 @@ public class AlgoComparison {
         Comparator comparator = new Comparator();
         for (String filename : list) {
             for (AlgorithmEnum algorithmEnum : algorithmEnumsList) {
-                loader.printFilename(filename + " [" + algorithmEnum.getValue() + "]");
+                loader.printFilename(getGraphName(filename) + " [" + algorithmEnum.getValue() + "]");
                 comparator.setAlgorithm(getAlgorithm(algorithmEnum));
                 comparator.disableLogger();
-                comparator.setDatasetFile(datasetsPath + filename, runningFromTerminal);
+                comparator.setDatasetFile(filename);
                 comparator.compute();
                 algorithmResultsMap.get(algorithmEnum.getValue()).add(comparator.getResults());
                 loader.printValues(comparator.getResults());

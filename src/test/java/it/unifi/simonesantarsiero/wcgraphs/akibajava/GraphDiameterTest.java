@@ -17,17 +17,22 @@ public class GraphDiameterTest {
         return file.getAbsolutePath() + FILE_SEPARATOR;
     }
 
+    private String getGraphName(String filename) {
+        String[] split = filename.split(FILE_SEPARATOR);
+        return split[split.length - 1];
+    }
+
     @Test
     public void testGraphDiameter_p2pGnutella04() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getPathsOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(0);
         GraphDiameter sut = new GraphDiameter();
         System.out.println(filename);
 
-        int diameter = sut.getDiameter(datasetsPath + filename + EXT_TSV);
+        int diameter = sut.getDiameter(filename + EXT_TSV);
 
-        Assert.assertEquals("p2p-Gnutella04", filename);
+        Assert.assertEquals("p2p-Gnutella04", getGraphName(filename));
         Assert.assertEquals(10879, sut.getNumVertices());
         Assert.assertEquals(26, diameter);
         Assert.assertEquals(118, sut.getNumBFS());
@@ -36,14 +41,14 @@ public class GraphDiameterTest {
     @Test
     public void testGraphDiameter_p2pGnutella05() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getPathsOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(1);
         GraphDiameter sut = new GraphDiameter();
         System.out.println(filename);
 
-        int diameter = sut.getDiameter(datasetsPath + filename + EXT_TSV);
+        int diameter = sut.getDiameter(filename + EXT_TSV);
 
-        Assert.assertEquals("p2p-Gnutella05", filename);
+        Assert.assertEquals("p2p-Gnutella05", getGraphName(filename));
         Assert.assertEquals(8846, sut.getNumVertices());
         Assert.assertEquals(22, diameter);
         Assert.assertEquals(26, sut.getNumBFS());
@@ -52,14 +57,14 @@ public class GraphDiameterTest {
     @Test
     public void testGraphDiameter_wikiVote() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getPathsOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
         String filename = list.get(2);
         GraphDiameter sut = new GraphDiameter();
         System.out.println(filename);
 
-        int diameter = sut.getDiameter(datasetsPath + filename + EXT_TSV);
+        int diameter = sut.getDiameter(filename + EXT_TSV);
 
-        Assert.assertEquals("wiki-Vote", filename);
+        Assert.assertEquals("wiki-Vote", getGraphName(filename));
         Assert.assertEquals(8295, sut.getNumVertices());
         Assert.assertEquals(10, diameter);
         Assert.assertEquals(3, sut.getNumBFS());

@@ -12,8 +12,8 @@ public class Comparator {
         this.diameterCalculatorAlgorithm = diameterCalculatorAlgorithm;
     }
 
-    public void setDatasetFile(String datasetFile, boolean runningFromTerminal) {
-        diameterCalculatorAlgorithm.setDatasetFile(datasetFile, runningFromTerminal);
+    public void setDatasetFile(String datasetFile) {
+        diameterCalculatorAlgorithm.setDatasetFile(datasetFile);
     }
 
     public void compute() {

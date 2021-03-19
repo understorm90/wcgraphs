@@ -27,9 +27,9 @@ public class NewSumSweep extends AlgorithmStrategy {
                 LOGGER.info(USAGE_ERROR_MESSAGE, NewSumSweep.class.getCanonicalName());
                 return;
             }
-            algorithm.setDatasetFile(args[0], true);
+            algorithm.setDatasetFile(args[0]);
         } else {
-            algorithm.setDatasetFile("", false);
+            algorithm.setDatasetsFromSNAP();
         }
         algorithm.compute();
     }
@@ -44,11 +44,12 @@ public class NewSumSweep extends AlgorithmStrategy {
         List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
         DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
         for (String filename : list) {
-            loader.printFilename(filename);
+            String graphName = getGraphName(filename);
+            loader.printFilename(graphName);
 
             ImmutableGraph graph;
             try {
-                graph = ImmutableGraph.load(datasetsPath + filename);
+                graph = ImmutableGraph.load(filename);
 
                 long time = -System.currentTimeMillis();
 
@@ -58,7 +59,7 @@ public class NewSumSweep extends AlgorithmStrategy {
                 time += System.currentTimeMillis();
 
                 mapResult = new HashMap<>();
-                mapResult.put(VALUE_DATASET, filename);
+                mapResult.put(VALUE_DATASET, graphName);
                 mapResult.put(VALUE_NN, graph.numNodes());
                 mapResult.put("arcs", graph.numArcs());
                 mapResult.put(VALUE_DIAMETER, nss.getD());

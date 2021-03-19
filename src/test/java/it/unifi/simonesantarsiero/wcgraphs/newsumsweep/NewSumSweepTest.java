@@ -22,22 +22,19 @@ public class NewSumSweepTest {
     public void testDatasetFiles() {
         String datasetsPath = getDatasetsPathFromResource();
 
-        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        List<String> list = getPathsOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
 
         Assert.assertEquals(3, list.size());
-        Assert.assertTrue(list.contains("p2p-Gnutella04"));
-        Assert.assertTrue(list.contains("p2p-Gnutella05"));
-        Assert.assertTrue(list.contains("wiki-Vote"));
     }
 
     @Test
     public void testNewSumSweep() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
-        String filename = list.get(0);
         NewSumSweep sut = new NewSumSweep();
+        List<String> list = getPathsOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        String filename = list.get(0);
         sut.disableLogger();
-        sut.setDatasetFile(filename, false);
+        sut.setDatasetFile(filename);
 
         sut.compute();
         Map<String, Object> results = sut.getResults();
@@ -51,11 +48,11 @@ public class NewSumSweepTest {
     @Test
     public void testNewSumSweep_p2p_Gnutella04() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
-        String filename = list.get(0);
         NewSumSweep sut = new NewSumSweep();
+        List<String> list = getPathsOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        String filename = list.get(0);
         sut.disableLogger();
-        sut.setDatasetFile(filename, false);
+        sut.setDatasetFile(filename);
 
         sut.compute();
         Map<String, Object> results = sut.getResults();
@@ -69,11 +66,11 @@ public class NewSumSweepTest {
     @Test
     public void testNewSumSweep_p2p_Gnutella05() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
-        String filename = list.get(1);
         NewSumSweep sut = new NewSumSweep();
+        List<String> list = getPathsOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        String filename = list.get(1);
         sut.disableLogger();
-        sut.setDatasetFile(filename, false);
+        sut.setDatasetFile(filename);
 
         sut.compute();
         Map<String, Object> results = sut.getResults();
@@ -87,11 +84,11 @@ public class NewSumSweepTest {
     @Test
     public void testNewSumSweep_wiki_Vote() {
         String datasetsPath = getDatasetsPathFromResource();
-        List<String> list = getListOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
-        String filename = list.get(2);
         NewSumSweep sut = new NewSumSweep();
+        List<String> list = getPathsOfGraphsAvailableInDirectory(datasetsPath, EXT_TSV);
+        String filename = list.get(2);
         sut.disableLogger();
-        sut.setDatasetFile(filename, false);
+        sut.setDatasetFile(filename);
 
         sut.compute();
         Map<String, Object> results = sut.getResults();

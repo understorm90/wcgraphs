@@ -27,9 +27,9 @@ public class AkibaJava extends AlgorithmStrategy {
                 LOGGER.info(USAGE_ERROR_MESSAGE, AkibaJava.class.getCanonicalName());
                 return;
             }
-            algorithm.setDatasetFile(args[0], true);
+            algorithm.setDatasetFile(args[0]);
         } else {
-            algorithm.setDatasetFile("", false);
+            algorithm.setDatasetsFromSNAP();
         }
         algorithm.compute();
     }
@@ -44,13 +44,14 @@ public class AkibaJava extends AlgorithmStrategy {
         List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
         DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
         for (String filename : list) {
-            loader.printFilename(filename);
+            String graphName = getGraphName(filename);
+            loader.printFilename(graphName);
 
             GraphDiameter gd = new GraphDiameter();
-            int diameter = gd.getDiameter(datasetsPath + filename + EXT_TSV);
+            int diameter = gd.getDiameter(filename + EXT_TSV);
 
             mapResult = new HashMap<>();
-            mapResult.put(VALUE_DATASET, filename);
+            mapResult.put(VALUE_DATASET, graphName);
             mapResult.put(VALUE_NN, gd.getNumVertices());
             mapResult.put(VALUE_DIAMETER, diameter);
             mapResult.put(VALUE_NUM_OF_BFS, gd.getNumBFS());
