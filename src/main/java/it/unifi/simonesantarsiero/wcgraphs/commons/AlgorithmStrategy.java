@@ -7,14 +7,13 @@ import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 public abstract class AlgorithmStrategy {
     protected Map<String, Object> mapResult;
     protected final List<String> list = new ArrayList<>();
-    protected final String workingDirectory = System.getProperty("user.dir");
 
     public void setDatasetFile(String datasetFile) {
         list.add(datasetFile);
     }
 
     public void setDatasetsFromSNAP() {
-        list.addAll(getPathsOfGraphsAvailableInDirectory(workingDirectory + FILE_SEPARATOR + DATASETS_PATH, getDatasetFileExtension()));
+        list.addAll(getPathsOfGraphsAvailableInDirectory(System.getProperty("user.dir") + FILE_SEPARATOR + DATASETS_PATH, getDatasetFileExtension()));
     }
 
     public String getGraphName(String filename) {

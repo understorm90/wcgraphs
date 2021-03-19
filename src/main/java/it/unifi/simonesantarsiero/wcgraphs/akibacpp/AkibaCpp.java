@@ -71,6 +71,7 @@ public class AkibaCpp extends AlgorithmStrategy {
         String currentPath;
 
         if (System.console() != null) {
+            String workingDirectory = System.getProperty("user.dir");
             currentPath = workingDirectory + FILE_SEPARATOR;
 
             // copy .CPP and .H files
