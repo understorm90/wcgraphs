@@ -21,7 +21,9 @@ public class RandomGraphGeneratorTest {
     @Test
     public void testRandomGraphGenerator_3vertices() {
         sut = new RandomGraphGenerator(3);
-        logResults(sut.writeToFileTSV(), sut.getVertices(), sut.getEdges(), sut.getDensity());
+        String basename = sut.writeToFileTSV();
+        sut.generateFilesForWebgraph(basename);
+        logResults(basename, sut.getVertices(), sut.getEdges(), sut.getDensity());
 
         int nVerticesSquared = sut.getVertices() * sut.getVertices();
         Assert.assertEquals(3, sut.getVertices());
@@ -31,7 +33,9 @@ public class RandomGraphGeneratorTest {
     @Test
     public void testRandomGraphGenerator_4vertices() {
         sut = new RandomGraphGenerator(4);
-        logResults(sut.writeToFileTSV(), sut.getVertices(), sut.getEdges(), sut.getDensity());
+        String basename = sut.writeToFileTSV();
+        sut.generateFilesForWebgraph(basename);
+        logResults(basename, sut.getVertices(), sut.getEdges(), sut.getDensity());
 
         int nVerticesSquared = sut.getVertices() * sut.getVertices();
         Assert.assertEquals(4, sut.getVertices());

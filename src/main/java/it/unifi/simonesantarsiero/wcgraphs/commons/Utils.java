@@ -27,6 +27,7 @@ public class Utils {
     public static final String VALUE_TIME = "Time (s)";
 
     public static final String EXT_TSV = ".tsv";
+    public static final String EXT_ARCS = ".arcs";
     public static final String EXT_GRAPH = ".graph";
     public static final String EXT_JAR = ".jar";
 

@@ -14,8 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.EXT_TSV;
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.RANDOM_GENERATED_DATASETS_PATH;
+import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
 public class RandomGraphGenerator {
 
@@ -98,28 +97,42 @@ public class RandomGraphGenerator {
         return false;
     }
 
+    /**
+     * Creates a file (with extension <samp>.tsv</samp>) where each row represents a pair of edges of the graph.
+     *
+     * @return a String containing the basename of the graph.
+     */
     public String writeToFileTSV() {
         if (edges == null) {
             return EMPTY_STRING;
         }
-        String filename;
+        String basename;
         File dir = new File(RANDOM_GENERATED_DATASETS_PATH);
         if (!dir.exists() && !dir.mkdirs()) {
-            filename = EMPTY_STRING;
+            basename = EMPTY_STRING;
         } else {
-            filename = RANDOM_GENERATED_DATASETS_PATH;
+            basename = RANDOM_GENERATED_DATASETS_PATH;
         }
 
-        filename += "random-graph_v" + nVertices + "_e" + mEdges + EXT_TSV;
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename))) {
+        basename += "random-graph_v" + nVertices + "_e" + mEdges;
+        try (
+                BufferedWriter bw1 = new BufferedWriter(new FileWriter(basename + EXT_TSV));
+                BufferedWriter bw2 = new BufferedWriter(new FileWriter(basename + EXT_ARCS));
+        ) {
             for (Pair<Integer, Integer> pair : edges) {
-                bw.write(Integer.toString(pair.getFirst()));
-                bw.write("\t");
-                bw.write(Integer.toString(pair.getSecond()));
-                bw.write("\n");
+                bw1.write(Integer.toString(pair.getFirst()));
+                bw1.write("\t");
+                bw1.write(Integer.toString(pair.getSecond()));
+                bw1.write("\n");
+
+                bw2.write(Integer.toString(pair.getFirst()));
+                bw2.write("\t");
+                bw2.write(Integer.toString(pair.getSecond()));
+                bw2.write("\n");
             }
-            bw.flush();
-            return filename;
+            bw1.flush();
+            bw2.flush();
+            return basename;
         } catch (Exception e) {
             LOGGER.error("Exception", e);
         }
@@ -141,16 +154,16 @@ public class RandomGraphGenerator {
         return builder.toString();
     }
 
-//    @SuppressWarnings("deprecation")
-    public void generateFilesGOP(String source) {
+    /**
+     * Creates 3 files (.graph, .offsets, .properties) required for WebGraph algorithm.
+     *
+     * @param basename the basename of the graph.
+     */
+    public void generateFilesForWebgraph(String basename) {
         ImmutableGraph graph;
         try {
-            graph = ArcListASCIIGraph.loadSequential(source);
-
-            String dest = source.substring(0, source.length() - 4);
-            int flags = 0;
-            BVGraph.store(graph, dest, DEFAULT_WINDOW_SIZE, DEFAULT_MAX_REF_COUNT, DEFAULT_MIN_INTERVAL_LENGTH, DEFAULT_ZETA_K, flags, null);
-
+            graph = ArcListASCIIGraph.loadSequential(basename + EXT_ARCS);
+            BVGraph.store(graph, basename, DEFAULT_WINDOW_SIZE, DEFAULT_MAX_REF_COUNT, DEFAULT_MIN_INTERVAL_LENGTH, DEFAULT_ZETA_K, 0, null);
         } catch (Exception e) {
             LOGGER.error("Exception", e);
         }
