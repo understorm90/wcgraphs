@@ -19,7 +19,7 @@ public class AlgorithmResultsTest extends ResultFromDataset {
         Assert.assertEquals(3, sut.size());
         int datasetIndex = 0;
         Assert.assertEquals("dataset1", sut.get(datasetIndex).get(VALUE_DATASET));
-        Assert.assertEquals(1, sut.get(datasetIndex).get(VALUE_NN));
+        Assert.assertEquals(1, sut.get(datasetIndex).get(VALUE_VERTICES));
         Assert.assertEquals(22, sut.get(datasetIndex).get(VALUE_DIAMETER));
         Assert.assertEquals(33, sut.get(datasetIndex).get(VALUE_NUM_OF_BFS));
         Assert.assertEquals(44.5, sut.get(datasetIndex).get(VALUE_TIME));

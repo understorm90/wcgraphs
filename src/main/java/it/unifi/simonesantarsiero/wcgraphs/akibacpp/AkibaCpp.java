@@ -10,8 +10,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
@@ -47,8 +45,7 @@ public class AkibaCpp extends AlgorithmStrategy {
     public void compute() {
         String currentPath = prepareFilesToExecute();
 
-        List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
-        DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
+        DatasetLogger loader = new DatasetLogger(LOGGER);
         for (String filename : list) {
             String graphName = getGraphName(filename);
             loader.printFilename(graphName);
@@ -60,7 +57,7 @@ public class AkibaCpp extends AlgorithmStrategy {
             String output = TerminalUtils.exeCommand(currentPath + TEST_EXE + " " + filename + EXT_TSV);
             OutputParser parser = new OutputParser(output);
 
-            setResults(graphName, parser.getVertices(), parser.getDiameter(), parser.getBFS(), parser.getTime());
+            setResults(graphName, parser.getVertices(), -1, parser.getDiameter(), parser.getBFS(), parser.getTime());
 
             loader.printValues(mapResult);
         }

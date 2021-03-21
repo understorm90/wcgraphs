@@ -40,7 +40,7 @@ public class NewSumSweepTest {
         Map<String, Object> results = sut.getResults();
 
         assertEquals("p2p-Gnutella04", results.get(VALUE_DATASET));
-        assertEquals(10879, results.get(VALUE_NN));
+        assertEquals(10879, results.get(VALUE_VERTICES));
         assertEquals(26, results.get(VALUE_DIAMETER));
         assertEquals(17, results.get(VALUE_NUM_OF_BFS));
     }
@@ -58,7 +58,7 @@ public class NewSumSweepTest {
         Map<String, Object> results = sut.getResults();
 
         assertEquals("p2p-Gnutella04", results.get(VALUE_DATASET));
-        assertEquals(10879, results.get(VALUE_NN));
+        assertEquals(10879, results.get(VALUE_VERTICES));
         assertEquals(26, results.get(VALUE_DIAMETER));
         assertEquals(17, results.get(VALUE_NUM_OF_BFS));
     }
@@ -76,7 +76,7 @@ public class NewSumSweepTest {
         Map<String, Object> results = sut.getResults();
 
         assertEquals("p2p-Gnutella05", results.get(VALUE_DATASET));
-        assertEquals(8846, results.get(VALUE_NN));
+        assertEquals(8846, results.get(VALUE_VERTICES));
         assertEquals(22, results.get(VALUE_DIAMETER));
         assertEquals(27, results.get(VALUE_NUM_OF_BFS));
     }
@@ -94,7 +94,7 @@ public class NewSumSweepTest {
         Map<String, Object> results = sut.getResults();
 
         assertEquals("wiki-Vote", results.get(VALUE_DATASET));
-        assertEquals(8295, results.get(VALUE_NN));
+        assertEquals(8295, results.get(VALUE_VERTICES));
         assertEquals(10, results.get(VALUE_DIAMETER));
         assertEquals(10, results.get(VALUE_NUM_OF_BFS));
     }

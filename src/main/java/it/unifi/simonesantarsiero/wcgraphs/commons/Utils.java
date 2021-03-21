@@ -21,9 +21,11 @@ public class Utils {
 
     public static final String VALUE_GRAPH = "Graph";
     public static final String VALUE_DATASET = "dataset";
-    public static final String VALUE_NN = "NN";
+    public static final String VALUE_VERTICES = "nVertices";
+    public static final String VALUE_EDGES = "mEdges";
+    public static final String VALUE_DENSITY = "density";
     public static final String VALUE_DIAMETER = "Diameter";
-    public static final String VALUE_NUM_OF_BFS = "iterD";
+    public static final String VALUE_NUM_OF_BFS = "#BFS";
     public static final String VALUE_TIME = "Time (s)";
 
     public static final String EXT_TSV = ".tsv";
@@ -43,6 +45,12 @@ public class Utils {
 
     private static String colorize(String message) {
         return RED + message + RESET;
+    }
+
+    // truncate the value to the 'places' decimal
+    public static double roundAvoid(double value, int places) {
+        double scale = Math.pow(10, places);
+        return Math.round(value * scale) / scale;
     }
 
     private static String getProperty(String propertyName) {

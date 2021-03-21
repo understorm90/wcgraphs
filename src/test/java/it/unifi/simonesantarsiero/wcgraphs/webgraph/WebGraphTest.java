@@ -24,7 +24,7 @@ public class WebGraphTest {
 
     @Test
     public void testMutableGraph() {
-        List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
+        List<String> headersList = Arrays.asList(VALUE_VERTICES, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
         DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
 
         String filename = "test";
@@ -42,7 +42,7 @@ public class WebGraphTest {
 
         mapResult = new HashMap<>();
         mapResult.put(VALUE_DATASET, filename);
-        mapResult.put(VALUE_NN, graph.numNodes());
+        mapResult.put(VALUE_VERTICES, graph.numNodes());
         mapResult.put("arcs", graph.numArcs());
         mapResult.put(VALUE_DIAMETER, ss.getDiameter());
         mapResult.put(VALUE_NUM_OF_BFS, ss.getDiameterIterations());

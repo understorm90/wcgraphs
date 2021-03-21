@@ -7,10 +7,8 @@ import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import it.unimi.dsi.webgraph.ImmutableGraph;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
+import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.EXT_GRAPH;
+import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.USAGE_ERROR_MESSAGE;
 
 public class NewSumSweep extends AlgorithmStrategy {
 
@@ -40,8 +38,7 @@ public class NewSumSweep extends AlgorithmStrategy {
 
     @Override
     public void compute() {
-        List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
-        DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
+        DatasetLogger loader = new DatasetLogger(LOGGER);
         for (String filename : list) {
             String graphName = getGraphName(filename);
             loader.printFilename(graphName);
@@ -57,7 +54,7 @@ public class NewSumSweep extends AlgorithmStrategy {
 
                 time += System.currentTimeMillis();
 
-                setResults(graphName, graph.numNodes(), nss.getD(), nss.getIterD(), time / 1000d);
+                setResults(graphName, graph.numNodes(), graph.numArcs(), nss.getD(), nss.getIterD(), time / 1000d);
 
                 loader.printValues(mapResult);
 

@@ -41,7 +41,7 @@ public class AkibaJavaTest {
         Map<String, Object> results = sut.getResults();
 
         assertEquals("p2p-Gnutella04", results.get(VALUE_DATASET));
-        assertEquals(10879, results.get(VALUE_NN));
+        assertEquals(10879, results.get(VALUE_VERTICES));
         assertEquals(26, results.get(VALUE_DIAMETER));
         assertEquals(118, results.get(VALUE_NUM_OF_BFS));
     }
@@ -59,7 +59,7 @@ public class AkibaJavaTest {
         Map<String, Object> results = sut.getResults();
 
         assertEquals("p2p-Gnutella05", results.get(VALUE_DATASET));
-        assertEquals(8846, results.get(VALUE_NN));
+        assertEquals(8846, results.get(VALUE_VERTICES));
         assertEquals(22, results.get(VALUE_DIAMETER));
         assertEquals(26, results.get(VALUE_NUM_OF_BFS));
     }

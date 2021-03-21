@@ -17,6 +17,7 @@ public class GraphDiameter {
 	private int diameter;
 	private int numBFS;
 	private long time;
+	private ArrayList<Pair<Integer, Integer>> edges;
 
 	private long getTime() {
 		return System.currentTimeMillis();
@@ -334,7 +335,7 @@ public class GraphDiameter {
 	public int getDiameter(String filename, int numDoubleSweep) {
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 
-			ArrayList<Pair<Integer, Integer>> edges = new ArrayList<>();
+			edges = new ArrayList<>();
 
 			String currentLine;
 			String[] currentVertices;
@@ -354,6 +355,10 @@ public class GraphDiameter {
 
 	public int getNumVertices() {
 		return nVertices;
+	}
+
+	public int getNumEdges() {
+		return edges.size();
 	}
 
 	public int getNumBFS() {

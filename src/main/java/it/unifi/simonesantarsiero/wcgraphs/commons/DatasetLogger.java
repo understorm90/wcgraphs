@@ -4,8 +4,11 @@ import ch.qos.logback.classic.Logger;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
 public class DatasetLogger {
 
@@ -20,15 +23,26 @@ public class DatasetLogger {
 
     public DatasetLogger(List<String> headersList, Logger logger) {
         this.logger = logger;
+        headers = headersList;
+        initialize();
+        printHeader();
+    }
+
+    public DatasetLogger(Logger logger) {
+        this.logger = logger;
+        headers = Arrays.asList(VALUE_VERTICES, VALUE_EDGES, VALUE_DENSITY, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
+        initialize();
+        printHeader();
+    }
+
+    private void initialize() {
         header = VERTICAL_BAR + SPACE + Utils.VALUE_GRAPH + StringUtils.leftPad("", 45) + VERTICAL_BAR;
         lengths = IntArrayList.wrap(new int[]{header.length() - 4});
-        headers = headersList;
 
         for (String h : headers) {
             String newHeader = StringUtils.leftPad(h, 10);
             addToHeader(newHeader, newHeader.length());
         }
-        printHeader();
     }
 
     private void addToHeader(String s, int length) {
@@ -44,7 +58,7 @@ public class DatasetLogger {
         // - oppure parentesi aperte
         // - oppure parentesi chiuse
         // - oppure slash
-        header = header.replaceAll("[ \\w()/]", BOTTOM_BAR);
+        header = header.replaceAll("[ \\w()/#]", BOTTOM_BAR);
         logger.info("{}", header);
     }
 

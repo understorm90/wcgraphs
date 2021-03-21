@@ -24,10 +24,14 @@ public abstract class AlgorithmStrategy {
         return split[split.length - 1];
     }
 
-    public void setResults(String datasetName, int nVertices, int diameter, int nBFSs, double elapsedTime) {
+    public void setResults(String datasetName, int nVertices, long mEdges, int diameter, int nBFSs, double elapsedTime) {
         mapResult = new HashMap<>();
         mapResult.put(VALUE_DATASET, datasetName);
-        mapResult.put(VALUE_NN, nVertices);
+        mapResult.put(VALUE_VERTICES, nVertices);
+        if (mEdges != -1) {
+            mapResult.put(VALUE_EDGES, mEdges);
+            mapResult.put(VALUE_DENSITY, roundAvoid((double) mEdges / nVertices, 4));
+        }
         mapResult.put(VALUE_DIAMETER, diameter);
         mapResult.put(VALUE_NUM_OF_BFS, nBFSs);
         mapResult.put(VALUE_TIME, elapsedTime);

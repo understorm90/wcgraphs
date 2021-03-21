@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.VALUE_TIME;
+import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.roundAvoid;
 
 public class AlgorithmResults {
 	private List<Map<String, Object>> list;
@@ -48,11 +49,5 @@ public class AlgorithmResults {
 			sum += time;
 		}
 		return roundAvoid(sum / list.size(), 4);
-	}
-
-	// truncate the value to the 'places' decimal
-	private double roundAvoid(double value, int places) {
-		double scale = Math.pow(10, places);
-		return Math.round(value * scale) / scale;
 	}
 }

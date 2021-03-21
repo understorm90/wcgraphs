@@ -9,10 +9,8 @@ import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import org.slf4j.LoggerFactory;
 import utilities.Utilities;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
+import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.EXT_GRAPH;
+import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.USAGE_ERROR_MESSAGE;
 
 //rinominato le variabili in java style
 // Replace the synchronized class "Stack" by an unsynchronized one such as "Deque".
@@ -45,20 +43,20 @@ public class SumSweep extends AlgorithmStrategy {
     public void compute() {
         Utilities.verb = 0;
 
-        List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
-        DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
+        DatasetLogger loader = new DatasetLogger(LOGGER);
         for (String filename : list) {
             String graphName = getGraphName(filename);
             loader.printFilename(graphName);
 
             Dir graph = Dir.load(filename, GraphTypes.ADJLIST, Utilities.loadMethod);
             int nNodes = graph.getNN();
+            long mEdges = graph.getNE();
             graph.transformIntoBiggestWCC();
             alg.distances.SumSweepDir g = new alg.distances.SumSweepDir(graph);
             g.runAuto();
             double elapsedTime = g.graph.getElapsedTime() / 1000d;
 
-            setResults(graphName, nNodes, g.getD(), g.getIterD(), elapsedTime);
+            setResults(graphName, nNodes, mEdges, g.getD(), g.getIterD(), elapsedTime);
 
             loader.printValues(mapResult);
         }
