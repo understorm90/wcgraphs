@@ -28,7 +28,7 @@ public class AlgoComparison {
             }
             new AlgoComparison(args[0]);
         } else {
-            new AlgoComparison("");
+            new AlgoComparison();
         }
     }
 
@@ -37,17 +37,19 @@ public class AlgoComparison {
         return split[split.length - 1];
     }
 
+    public AlgoComparison() {
+        List<String> list = new ArrayList<>(
+                getPathsOfGraphsAvailableInDirectory(
+                        System.getProperty("user.dir") + FILE_SEPARATOR + DATASETS_PATH, EXT_TSV));
+        compareAlgorithms(list);
+    }
+
     public AlgoComparison(String datasetFile) {
+        compareAlgorithms(Collections.singletonList(datasetFile));
+    }
 
-        List<String> list = new ArrayList<>();
-        if ("".equals(datasetFile)) {
-            list.addAll(getPathsOfGraphsAvailableInDirectory(System.getProperty("user.dir") + FILE_SEPARATOR + DATASETS_PATH, EXT_TSV));
-        } else {
-            list.add(datasetFile);
-        }
-
-        List<String> headersList = Arrays.asList(VALUE_NN, VALUE_DIAMETER, VALUE_NUM_OF_BFS, VALUE_TIME);
-        DatasetLogger loader = new DatasetLogger(headersList, LOGGER);
+    private void compareAlgorithms(List<String> list) {
+        DatasetLogger loader = new DatasetLogger(LOGGER);
 
         Map<String, AlgorithmResults> algorithmResultsMap = new HashMap<>();
         List<AlgorithmEnum> algorithmEnumsList = Arrays.asList(AlgorithmEnum.values());
