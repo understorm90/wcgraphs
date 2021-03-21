@@ -8,7 +8,7 @@ import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.VALUE_TIME;
 
 public class AlgorithmResults {
 	private List<Map<String, Object>> list;
-	private String algorithmName;
+	private final String algorithmName;
 
 	public AlgorithmResults(String algorithmName) {
 		this.algorithmName = algorithmName;
@@ -47,7 +47,12 @@ public class AlgorithmResults {
 			double time = (double) stringObjectMap.get(VALUE_TIME);
 			sum += time;
 		}
-		return sum / list.size();
+		return roundAvoid(sum / list.size(), 4);
 	}
 
+	// truncate the value to the 'places' decimal
+	private double roundAvoid(double value, int places) {
+		double scale = Math.pow(10, places);
+		return Math.round(value * scale) / scale;
+	}
 }
