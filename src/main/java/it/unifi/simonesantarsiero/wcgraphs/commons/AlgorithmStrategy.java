@@ -1,6 +1,9 @@
 package it.unifi.simonesantarsiero.wcgraphs.commons;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 
@@ -31,7 +34,7 @@ public abstract class AlgorithmStrategy {
     }
 
     public final Map<String, Object> getResults() {
-        return Collections.unmodifiableMap(mapResult);
+        return mapResult;
     }
 
     public abstract String getDatasetFileExtension();
