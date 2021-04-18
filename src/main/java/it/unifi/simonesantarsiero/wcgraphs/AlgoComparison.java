@@ -23,6 +23,7 @@ public class AlgoComparison {
     private static final int MAX_VERTICES = 10000;
     private static final int N_EXPERIMENTS = 1000;
     private static final String VALUE_TIME_MEAN = "Time (s) (mean of " + N_EXPERIMENTS + " experiments)";
+    private static final boolean WITH_SYNTETIC_GRAPH = false;
 
     public static void main(String[] args) {
 
@@ -33,7 +34,7 @@ public class AlgoComparison {
             }
             new AlgoComparison(args[0]);
         } else {
-            new AlgoComparison(false);
+            new AlgoComparison(WITH_SYNTETIC_GRAPH);
         }
     }
 

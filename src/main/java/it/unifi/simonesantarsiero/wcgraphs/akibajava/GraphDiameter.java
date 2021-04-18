@@ -246,7 +246,6 @@ public class GraphDiameter {
 
 	public int getDiameter(List<Pair<Integer, Integer>> edges, int numDoubleSweep) {
 		// Prepare the adjacency list
-		// LinkedList<Integer> graph[];  non è type-safe quando vado a fare la new
 		ArrayList<LinkedList<Integer>> graph;
 		ArrayList<LinkedList<Integer>> rgraph;
 
