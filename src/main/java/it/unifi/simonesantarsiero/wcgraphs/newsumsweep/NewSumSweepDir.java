@@ -292,13 +292,13 @@ public class NewSumSweepDir {
 		int visitedB = 0;
 		int visitedA = 0;
 		for (int v = 0; v < graph.numNodes(); v++) {
-			if (visitF.dist[v] >= 0) {
+			if (visitF.distances[v] >= 0) {
 				visitedF++;
 			}
-			if (visitB.dist[v] >= 0) {
+			if (visitB.distances[v] >= 0) {
 				visitedB++;
 			}
-			if (visitF.dist[v] >= 0 && visitB.dist[v] >= 0) {
+			if (visitF.distances[v] >= 0 && visitB.distances[v] >= 0) {
 				visitedA++;
 			}
 		}
@@ -427,7 +427,7 @@ public class NewSumSweepDir {
 		NewImmutableGraph.performBBFS(revgraph, visit);
 
 		for (int v = 0; v < graph.numNodes(); v++) {
-			if (visit.dist[v] >= 0) {
+			if (visit.distances[v] >= 0) {
 				visited++;
 			}
 		}
@@ -436,7 +436,7 @@ public class NewSumSweepDir {
 		int eccB;
 
 		iter++;
-		eccB = visit.dist[visit.far];
+		eccB = visit.distances[visit.far];
 
 		lB[start] = eccB;
 		uB[start] = eccB;
@@ -447,10 +447,10 @@ public class NewSumSweepDir {
 		for (int i = 0; i < graph.numNodes(); i++) {
 			if (totDistF[i] >= 0) {
 
-				lF[i] = Math.max(lF[i], visit.dist[i]);
+				lF[i] = Math.max(lF[i], visit.distances[i]);
 
-				if (visit.dist[i] != -1) {
-					totDistF[i] += visit.dist[i];
+				if (visit.distances[i] != -1) {
+					totDistF[i] += visit.distances[i];
 				}
 			}
 		}
@@ -489,7 +489,7 @@ public class NewSumSweepDir {
 		NewImmutableGraph.performBFS(graph, visit);
 
 		for (int v = 0; v < graph.numNodes(); v++) {
-			if (visit.dist[v] >= 0) {
+			if (visit.distances[v] >= 0) {
 				visited++;
 			}
 		}
@@ -498,7 +498,7 @@ public class NewSumSweepDir {
 		int eccF;
 
 		iter++;
-		eccF = visit.dist[visit.far];
+		eccF = visit.distances[visit.far];
 
 		lF[start] = eccF;
 		uF[start] = eccF;
@@ -511,10 +511,10 @@ public class NewSumSweepDir {
 
 			if (totDistB[i] >= 0) {
 
-				lB[i] = Math.max(lB[i], visit.dist[i]);
+				lB[i] = Math.max(lB[i], visit.distances[i]);
 
-				if (visit.dist[i] != -1) {
-					totDistB[i] += visit.dist[i];
+				if (visit.distances[i] != -1) {
+					totDistB[i] += visit.distances[i];
 				}
 			}
 		}
@@ -532,7 +532,7 @@ public class NewSumSweepDir {
 		if (forward) {
 
 			NewImmutableGraph.performBFS(graph, visit);
-			ecc = visit.dist[visit.far];
+			ecc = visit.distances[visit.far];
 
 			totDistF[start] = -2;
 			lF[start] = ecc;
@@ -541,7 +541,7 @@ public class NewSumSweepDir {
 		} else {
 
 			NewImmutableGraph.performBBFS(revgraph, visit);
-			ecc = visit.dist[visit.far];
+			ecc = visit.distances[visit.far];
 
 			totDistB[start] = -2;
 			lB[start] = ecc;
@@ -572,14 +572,14 @@ public class NewSumSweepDir {
 
 		for (int v = 0; v < sccDag.numNodes(); v++) {
 
-			if (visitDistF.dist[pivot[v]] != -1) {
+			if (visitDistF.distances[pivot[v]] != -1) {
 				eccFalse[2 * v] = 0;
 			} else {
 				eccFalse[2 * v] = visitInSCCF.eccStart[v];
 				iterator = sccDag.successors(v);
 				for (j = 0; j < sccDag.outdegree(v); j++) {
 					w = iterator.nextInt();
-					if (visitDistF.dist[pivot[w]] == -1) {
+					if (visitDistF.distances[pivot[w]] == -1) {
 						int temp1 = eccFalse[2 * v];
 						int temp2 = eccFalse[2 * w];
 						int temp3 = edgesThroughSCCF[v].getInt(2 * j);
@@ -588,7 +588,7 @@ public class NewSumSweepDir {
 					}
 				}
 			}
-			if (visitDistB.dist[pivot[v]] == -1) {
+			if (visitDistB.distances[pivot[v]] == -1) {
 				ecc[2 * v] = visitInSCCF.eccStart[v];
 				iterator = sccDag.successors(v);
 
@@ -599,11 +599,11 @@ public class NewSumSweepDir {
 				}
 			} else {
 
-				ecc[2 * v] = Math.max(visitDistB.dist[pivot[v]] + visitDistF.dist[visitDistF.far], visitInSCCF.eccStart[v]);
+				ecc[2 * v] = Math.max(visitDistB.distances[pivot[v]] + visitDistF.distances[visitDistF.far], visitInSCCF.eccStart[v]);
 				iterator = sccDag.successors(v);
 				for (j = 0; j < sccDag.outdegree(v); j++) {
 					w = iterator.nextInt();
-					if (visitDistF.dist[pivot[w]] == -1) {
+					if (visitDistF.distances[pivot[w]] == -1) {
 						int temp1 = ecc[2 * v];
 						int temp2 = eccFalse[2 * w];
 						int temp3 = edgesThroughSCCF[v].getInt(2 * j);
@@ -619,19 +619,19 @@ public class NewSumSweepDir {
 		}
 
 		for (int v = sccDag.numNodes() - 1; v >= 0; v--) {
-			if (visitDistB.dist[pivot[v]] != -1) {
+			if (visitDistB.distances[pivot[v]] != -1) {
 				eccFalse[2 * v + 1] = 0;
 			} else {
 				eccFalse[2 * v + 1] = visitInSCCB.eccStart[v];
 				iterator = revsccDag.successors(v);
 				for (j = 0; j < revsccDag.outdegree(v); j++) {
 					w = iterator.nextInt();
-					if (visitDistB.dist[pivot[w]] == -1) {
+					if (visitDistB.distances[pivot[w]] == -1) {
 						eccFalse[2 * v + 1] = Math.max(eccFalse[2 * v + 1], eccFalse[2 * w + 1] + visitInSCCF.dist[edgesThroughSCCB[v].getInt(2 * j)] + 1 + visitInSCCB.dist[edgesThroughSCCB[v].getInt(2 * j + 1)]);
 					}
 				}
 			}
-			if (visitDistF.dist[pivot[v]] == -1) {
+			if (visitDistF.distances[pivot[v]] == -1) {
 
 				ecc[2 * v + 1] = visitInSCCB.eccStart[v];
 				iterator = revsccDag.successors(v);
@@ -641,11 +641,11 @@ public class NewSumSweepDir {
 					ecc[2 * v + 1] = Math.max(ecc[2 * v + 1], ecc[2 * w + 1] + visitInSCCB.dist[edgesThroughSCCB[v].getInt(2 * j)] + 1 + visitInSCCF.dist[edgesThroughSCCB[v].getInt(2 * j + 1)]);
 				}
 			} else {
-				ecc[2 * v + 1] = Math.max(visitDistF.dist[pivot[v]] + visitDistB.dist[visitDistB.far], visitInSCCB.eccStart[v]);
+				ecc[2 * v + 1] = Math.max(visitDistF.distances[pivot[v]] + visitDistB.distances[visitDistB.far], visitInSCCB.eccStart[v]);
 				iterator = revsccDag.successors(v);
 				for (j = 0; j < revsccDag.outdegree(v); j++) {
 					w = iterator.nextInt();
-					if (visitDistF.dist[pivot[w]] == -1) {
+					if (visitDistF.distances[pivot[w]] == -1) {
 						ecc[2 * v + 1] = Math.max(ecc[2 * v + 1], eccFalse[2 * w + 1] + visitInSCCB.dist[edgesThroughSCCB[v].getInt(2 * j)] + 1 + visitInSCCF.dist[edgesThroughSCCB[v].getInt(2 * j + 1)]);
 					}
 				}
@@ -684,9 +684,9 @@ public class NewSumSweepDir {
 
 		for (int v = 0; v < graph.numNodes(); v++) {
 
-			if (visitDistF.dist[v] >= 0 && visitDistB.dist[v] >= 0) {
-				uF[v] = Math.min(uF[v], eccPivot[2 * mScc[v]] + visitDistB.dist[v]);
-				uB[v] = Math.min(uB[v], eccPivot[2 * mScc[v] + 1] + visitDistF.dist[v]);
+			if (visitDistF.distances[v] >= 0 && visitDistB.distances[v] >= 0) {
+				uF[v] = Math.min(uF[v], eccPivot[2 * mScc[v]] + visitDistB.distances[v]);
+				uB[v] = Math.min(uB[v], eccPivot[2 * mScc[v] + 1] + visitDistF.distances[v]);
 			} else {
 				uF[v] = Math.min(uF[v], eccPivot[2 * mScc[v]] + visitInSCCB.dist[v]);
 				uB[v] = Math.min(uB[v], eccPivot[2 * mScc[v] + 1] + visitInSCCF.dist[v]);
