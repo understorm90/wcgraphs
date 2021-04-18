@@ -7,7 +7,6 @@ import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
 import it.unimi.dsi.logging.ProgressLogger;
 import it.unimi.dsi.webgraph.*;
 import it.unimi.dsi.webgraph.algo.ParallelBreadthFirstVisit;
-import visit.VisitBFS;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

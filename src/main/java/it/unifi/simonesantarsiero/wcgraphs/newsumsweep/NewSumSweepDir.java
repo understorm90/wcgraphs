@@ -9,9 +9,6 @@ import it.unimi.dsi.webgraph.LazyIntIterator;
 import it.unimi.dsi.webgraph.Transform;
 import it.unimi.dsi.webgraph.algo.StronglyConnectedComponents;
 import org.slf4j.LoggerFactory;
-import visit.ConnBFS;
-import visit.Dist;
-import visit.DistWithSCC;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -565,7 +562,7 @@ public class NewSumSweepDir {
 	 * @return an array containing in position 2*i an upper bound on the forward eccentricity of the pivot of the SCC i,
 	 * in position 2*i+1 an upper bound on the backward eccentricity of the same pivot.
 	 */
-	private int[] findEccPivot(Dist visitDistF, Dist visitDistB, NewDistMultipleInSCC visitInSCCF, NewDistMultipleInSCC visitInSCCB, int[] pivot) {
+	private int[] findEccPivot(Dist visitDistF, Dist visitDistB, DistMultipleInSCC visitInSCCF, DistMultipleInSCC visitInSCCB, int[] pivot) {
 
 		int[] ecc = new int[2 * sccDag.numNodes()];
 		int[] eccFalse = new int[2 * sccDag.numNodes()];
@@ -612,7 +609,7 @@ public class NewSumSweepDir {
 						int temp3 = edgesThroughSCCF[v].getInt(2 * j);
 						int temp4 = edgesThroughSCCF[v].getInt(2 * j + 1);
 						int temp5 = visitInSCCF.dist[temp3];
-						int temp6 =  Math.max(temp1, temp2 + temp5 + 1 + visitInSCCB.dist[temp4]);
+						int temp6 = Math.max(temp1, temp2 + temp5 + 1 + visitInSCCB.dist[temp4]);
 						ecc[2 * v] = temp6;
 					}
 				}
@@ -678,9 +675,9 @@ public class NewSumSweepDir {
 
 		printVisitData(visitDistF, visitDistB);
 
-		NewDistMultipleInSCC visitInSCCF = new NewDistMultipleInSCC(graph.numNodes(), mScc);
+		DistMultipleInSCC visitInSCCF = new DistMultipleInSCC(graph.numNodes(), mScc);
 		visitInSCCF.run(graph, revgraph, pivot, start, visitDistF.eccInSCC, true);
-		NewDistMultipleInSCC visitInSCCB = new NewDistMultipleInSCC(graph.numNodes(), mScc);
+		DistMultipleInSCC visitInSCCB = new DistMultipleInSCC(graph.numNodes(), mScc);
 		visitInSCCB.run(graph, revgraph, pivot, start, visitDistB.eccInSCC, false);
 
 		int[] eccPivot = findEccPivot(visitDistF, visitDistB, visitInSCCF, visitInSCCB, pivot);
