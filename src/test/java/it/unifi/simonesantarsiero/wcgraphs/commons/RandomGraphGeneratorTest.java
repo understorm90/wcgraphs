@@ -22,7 +22,7 @@ public class RandomGraphGeneratorTest {
     public void testRandomGraphGenerator_3vertices() {
         sut = new RandomGraphGenerator(3);
         String basename = sut.writeToFileTSV();
-        sut.generateFilesForWebgraph(basename);
+        DatasetUtils.generateFilesForWebgraph(basename);
         logResults(basename, sut.getVertices(), sut.getEdges(), sut.getDensity());
 
         int nVerticesSquared = sut.getVertices() * sut.getVertices();
@@ -34,7 +34,7 @@ public class RandomGraphGeneratorTest {
     public void testRandomGraphGenerator_4vertices() {
         sut = new RandomGraphGenerator(4);
         String basename = sut.writeToFileTSV();
-        sut.generateFilesForWebgraph(basename);
+        DatasetUtils.generateFilesForWebgraph(basename);
         logResults(basename, sut.getVertices(), sut.getEdges(), sut.getDensity());
 
         int nVerticesSquared = sut.getVertices() * sut.getVertices();

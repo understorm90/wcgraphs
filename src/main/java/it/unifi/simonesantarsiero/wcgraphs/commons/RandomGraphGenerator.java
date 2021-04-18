@@ -1,9 +1,6 @@
 package it.unifi.simonesantarsiero.wcgraphs.commons;
 
 import ch.qos.logback.classic.Logger;
-import it.unimi.dsi.webgraph.ArcListASCIIGraph;
-import it.unimi.dsi.webgraph.BVGraph;
-import it.unimi.dsi.webgraph.ImmutableGraph;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
@@ -152,20 +149,5 @@ public class RandomGraphGenerator {
                     .append("\n");
         }
         return builder.toString();
-    }
-
-    /**
-     * Creates 3 files (.graph, .offsets, .properties) required for WebGraph algorithm.
-     *
-     * @param basename the basename of the graph.
-     */
-    public void generateFilesForWebgraph(String basename) {
-        ImmutableGraph graph;
-        try {
-            graph = ArcListASCIIGraph.loadSequential(basename + EXT_ARCS);
-            BVGraph.store(graph, basename, DEFAULT_WINDOW_SIZE, DEFAULT_MAX_REF_COUNT, DEFAULT_MIN_INTERVAL_LENGTH, DEFAULT_ZETA_K, 0, null);
-        } catch (Exception e) {
-            LOGGER.error("Exception", e);
-        }
     }
 }

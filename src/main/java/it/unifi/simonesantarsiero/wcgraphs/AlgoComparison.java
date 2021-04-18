@@ -3,10 +3,7 @@ package it.unifi.simonesantarsiero.wcgraphs;
 import ch.qos.logback.classic.Logger;
 import it.unifi.simonesantarsiero.wcgraphs.akibacpp.AkibaCpp;
 import it.unifi.simonesantarsiero.wcgraphs.akibajava.AkibaJava;
-import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmEnum;
-import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmStrategy;
-import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
-import it.unifi.simonesantarsiero.wcgraphs.commons.RandomGraphGenerator;
+import it.unifi.simonesantarsiero.wcgraphs.commons.*;
 import it.unifi.simonesantarsiero.wcgraphs.newsumsweep.NewSumSweep;
 import it.unifi.simonesantarsiero.wcgraphs.sumsweep.SumSweep;
 import it.unifi.simonesantarsiero.wcgraphs.webgraph.WebGraph;
@@ -100,7 +97,7 @@ public class AlgoComparison {
 
                 RandomGraphGenerator randomGraphGenerator = new RandomGraphGenerator(nVertices, mEdges);
                 String basename = randomGraphGenerator.writeToFileTSV();
-                randomGraphGenerator.generateFilesForWebgraph(basename);
+                DatasetUtils.generateFilesForWebgraph(basename);
 
                 for (int exp = 0; exp < N_EXPERIMENTS; exp++) {
                     for (AlgorithmEnum algorithmEnum : algorithmEnumsList) {
