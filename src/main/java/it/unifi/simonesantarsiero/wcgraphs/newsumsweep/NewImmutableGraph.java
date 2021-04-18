@@ -21,9 +21,11 @@ public class NewImmutableGraph {
 
 	private static final String ARCS_EXTENSION = ".arcs";
 
-	private NewImmutableGraph() {}
+	private NewImmutableGraph() {
+	}
 
 	// SumSweep - graph - GeneralGraph (dir and undir graphs)
+
 	/**
 	 * @return the vertex with maximum out-degree.
 	 */
@@ -31,7 +33,12 @@ public class NewImmutableGraph {
 		return maxDegVert(g);
 	}
 
+	public static int maxOutDegree(ImmutableGraph g) {
+		return g.outdegree(maxDegVert(g));
+	}
+
 	// SumSweep - adjlist - Abstract
+
 	/**
 	 * @return The vertex with maximum degree.
 	 */

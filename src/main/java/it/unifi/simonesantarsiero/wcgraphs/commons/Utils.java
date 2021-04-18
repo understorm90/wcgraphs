@@ -21,9 +21,11 @@ public class Utils {
 
     public static final String VALUE_GRAPH = "Graph";
     public static final String VALUE_DATASET = "dataset";
+    public static final String VALUE_DATASET_SOURCE = "source";
     public static final String VALUE_VERTICES = "nVertices";
     public static final String VALUE_EDGES = "mEdges";
     public static final String VALUE_DENSITY = "density";
+    public static final String VALUE_MAX_DEGREE = "maxDegree";
     public static final String VALUE_DIAMETER = "Diameter";
     public static final String VALUE_NUM_OF_BFS = "#BFS";
     public static final String VALUE_TIME = "Time (s)";
