@@ -34,7 +34,7 @@ public class GraphDiameter {
 		return w % nVertices;
 	}
 
-	private int[] getSCC(ArrayList<LinkedList<Integer>> graph) {
+	private int[] getSCC(ArrayList<ArrayList<Integer>> graph) {
 		int numVisit = 0;
 		int numScc = 0;
 		int[] scc = new int[nVertices];
@@ -115,10 +115,10 @@ public class GraphDiameter {
 		return vertices;
 	}
 
-	private ArrayList<LinkedList<Integer>> resize(int nVertices) {
-		ArrayList<LinkedList<Integer>> graph = new ArrayList<>(nVertices);
+	private ArrayList<ArrayList<Integer>> resize(int nVertices) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>(nVertices);
 		for (int i = 0; i < nVertices; i++) {
-			graph.add(new LinkedList<>());
+			graph.add(new ArrayList<>());
 		}
 		return graph;
 	}
@@ -145,7 +145,7 @@ public class GraphDiameter {
 		return ub;
 	}
 
-	private int bfs(ArrayList<LinkedList<Integer>> graphOrReversedGraph, int start, int[] dist, int[] queue) {
+	private int bfs(ArrayList<ArrayList<Integer>> graphOrReversedGraph, int start, int[] dist, int[] queue) {
 		int qs;
 		int qt;
 
@@ -166,7 +166,7 @@ public class GraphDiameter {
 		return qt;
 	}
 
-	private int bfsWithScc(ArrayList<LinkedList<Integer>> rgraph, int start, int[] dist, int[] queue, int[] scc, int[] ecc) {
+	private int bfsWithScc(ArrayList<ArrayList<Integer>> rgraph, int start, int[] dist, int[] queue, int[] scc, int[] ecc) {
 		int qt;
 		int qs;
 
@@ -196,7 +196,7 @@ public class GraphDiameter {
 		}
 	}
 
-	private void doubleSweep(int numDoubleSweep, ArrayList<LinkedList<Integer>> graph, ArrayList<LinkedList<Integer>> rgraph, int[] dist, int[] queue) {
+	private void doubleSweep(int numDoubleSweep, ArrayList<ArrayList<Integer>> graph, ArrayList<ArrayList<Integer>> rgraph, int[] dist, int[] queue) {
 		int qt;
 		for (int i = 0; i < numDoubleSweep; i++) {
 
@@ -215,7 +215,7 @@ public class GraphDiameter {
 		}
 	}
 
-	private ArrayList<Pair<Long, Integer>> getOrderedVertices(ArrayList<LinkedList<Integer>> graph, ArrayList<LinkedList<Integer>> rgraph, int[] scc) {
+	private ArrayList<Pair<Long, Integer>> getOrderedVertices(ArrayList<ArrayList<Integer>> graph, ArrayList<ArrayList<Integer>> rgraph, int[] scc) {
 		ArrayList<Pair<Long, Integer>> order = new ArrayList<>(Collections.nCopies(nVertices, new Pair<>((long) -1, -1)));
 
 		for (int v = 0; v < nVertices; v++) {
@@ -246,8 +246,8 @@ public class GraphDiameter {
 
 	public int getDiameter(List<Pair<Integer, Integer>> edges, int numDoubleSweep) {
 		// Prepare the adjacency list
-		ArrayList<LinkedList<Integer>> graph;
-		ArrayList<LinkedList<Integer>> rgraph;
+		ArrayList<ArrayList<Integer>> graph;
+		ArrayList<ArrayList<Integer>> rgraph;
 
 		nVertices = getNumVerticesFromListOfEdges(edges);
 		graph = resize(nVertices);
