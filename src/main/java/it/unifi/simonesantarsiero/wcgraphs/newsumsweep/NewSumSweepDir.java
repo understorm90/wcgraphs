@@ -34,9 +34,9 @@ public class NewSumSweepDir {
 	private int diameter;
 	private int diametralVertex;
 	private int radialVertex;
-	private int iterR = -1;
-	private int iterD = -1;
-	private int iter = 0;
+	private int iterR;
+	private int iterD;
+	private int iter;
 	private ImmutableGraph graph;
 	private ImmutableGraph revgraph;
 	private ImmutableGraph sccDag;

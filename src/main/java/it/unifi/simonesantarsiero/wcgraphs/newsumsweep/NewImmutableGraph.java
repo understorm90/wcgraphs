@@ -24,25 +24,10 @@ public class NewImmutableGraph {
 	private NewImmutableGraph() {
 	}
 
-	// SumSweep - graph - GeneralGraph (dir and undir graphs)
-
 	/**
 	 * @return the vertex with maximum out-degree.
 	 */
 	public static int maxOutDegVert(ImmutableGraph g) {
-		return maxDegVert(g);
-	}
-
-	public static int maxOutDegree(ImmutableGraph g) {
-		return g.outdegree(maxDegVert(g));
-	}
-
-	// SumSweep - adjlist - Abstract
-
-	/**
-	 * @return The vertex with maximum degree.
-	 */
-	private static int maxDegVert(ImmutableGraph g) {
 		int max = 0;
 		for (int v = 1; v < g.numNodes(); v++) {
 			if (g.outdegree(v) > g.outdegree(max)) {
@@ -52,7 +37,10 @@ public class NewImmutableGraph {
 		return max;
 	}
 
-	// creato io?
+	public static int maxOutDegree(ImmutableGraph g) {
+		return g.outdegree(maxOutDegVert(g));
+	}
+
 	public static ImmutableGraph createNewGraph(IntArrayList[] arcs) {
 		ArrayListMutableGraph mutableGraph = new ArrayListMutableGraph(arcs.length);
 
@@ -65,9 +53,7 @@ public class NewImmutableGraph {
 		return mutableGraph.immutableView();
 	}
 
-	/**
-	 * OK
-	 */
+	//usato per collapseVertices
 	public static int[] getNewNumbers(int[] groups, int nGroups) {
 		int[] newNumbers = new int[groups.length];
 		int[] sizes = new int[nGroups];
@@ -89,9 +75,7 @@ public class NewImmutableGraph {
 		return newNumbers;
 	}
 
-	/**
-	 * OK
-	 */
+	//usato per collapseVertices
 	//AdjListArray
 	public static IntArrayList[] permuteVertices(ImmutableGraph g, int[] permutation) {
 		int nn = g.numNodes();
@@ -104,17 +88,16 @@ public class NewImmutableGraph {
 
 			LazyIntIterator iterator = g.successors(i);
 
-			for(int v; (v = iterator.nextInt()) != -1;) {
+			for (int v; (v = iterator.nextInt()) != -1; ) {
 				newAdj[permutation[i]].add(permutation[v]);
 			}
 		}
 		return newAdj;
 	}
 
+	//usato per collapseVertices
 	// alg - graph - Dir
-	/**
-	 * OK
-	 */
+
 	/**
 	 * Collapses all vertices in the same group, and returns the obtained graph. Furthermore, vertices in this graph are sorted according
 	 * to the groups
@@ -156,9 +139,6 @@ public class NewImmutableGraph {
 	}
 
 	// Metodi di Dir
-	/**
-	 * OK
-	 */
 	public static void storeGraphFile(ImmutableGraph graph, CharSequence basename, int[] map) throws IOException {
 
 		final PrintStream ps = new PrintStream(new FastBufferedOutputStream(new FileOutputStream(basename + ARCS_EXTENSION)), false, StandardCharsets.US_ASCII.toString());
@@ -185,7 +165,6 @@ public class NewImmutableGraph {
 	}
 
 	/**
-	 * OK
 	 * @throws JSAPException
 	 * @throws IOException
 	 * @throws InstantiationException
@@ -203,12 +182,9 @@ public class NewImmutableGraph {
 	}
 
 	/**
-	 * OK
-	 */
-	/**
 	 * Removes from this graph every node which is not in the biggest weakly connected component.
 	 */
-	// SumSweep - Graph - Dir
+	// SumSweep - graph.Dir
 	public static ImmutableGraph transformIntoBiggestWCC(ImmutableGraph graph, String basename) throws IOException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException, InstantiationException, JSAPException {
 
 		String wccSuffix = "_WCC";
@@ -224,9 +200,6 @@ public class NewImmutableGraph {
 		return ImmutableGraph.load(basename);
 	}
 
-	/**
-	 * OK
-	 */
 	/**
 	 * Returns the largest connected components of a symmetric graph.
 	 */
