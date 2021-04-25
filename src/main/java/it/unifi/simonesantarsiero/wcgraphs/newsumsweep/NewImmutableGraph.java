@@ -53,7 +53,6 @@ public class NewImmutableGraph {
 		return mutableGraph.immutableView();
 	}
 
-	//usato per collapseVertices
 	public static int[] getNewNumbers(int[] groups, int nGroups) {
 		int[] newNumbers = new int[groups.length];
 		int[] sizes = new int[nGroups];
@@ -75,8 +74,6 @@ public class NewImmutableGraph {
 		return newNumbers;
 	}
 
-	//usato per collapseVertices
-	//AdjListArray
 	public static IntArrayList[] permuteVertices(ImmutableGraph g, int[] permutation) {
 		int nn = g.numNodes();
 
@@ -94,9 +91,6 @@ public class NewImmutableGraph {
 		}
 		return newAdj;
 	}
-
-	//usato per collapseVertices
-	// alg - graph - Dir
 
 	/**
 	 * Collapses all vertices in the same group, and returns the obtained graph. Furthermore, vertices in this graph are sorted according
