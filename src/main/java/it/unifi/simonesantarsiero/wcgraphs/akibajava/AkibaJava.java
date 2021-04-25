@@ -9,9 +9,6 @@ import org.slf4j.LoggerFactory;
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.EXT_TSV;
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.USAGE_ERROR_MESSAGE;
 
-//rinominato le variabili in java style
-// Replace the synchronized class "Stack" by an unsynchronized one such as "Deque".
-//rimpiazzati i println con i logger
 public class AkibaJava extends AlgorithmStrategy {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(AkibaJava.class);
