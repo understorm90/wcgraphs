@@ -76,54 +76,6 @@ public class NewSumSweepDir {
 	 */
 	public int getRv() {return radialVertex;}
 
-	/**Returns the value of k such that (a[k], b[k]) is lexicographically maximal among those pairs such that both a[i] and b[i] are positive.
-	 * @param a the first array
-	 * @param b the second array (must be at least as long as the first).
-	 * @return the value of k required
-	 */
-	public static int argMax(int[] a, int[] b) {
-		int max = -1;
-
-		for (int k = 0; k < a.length; k++) {
-			if (a[k] >= 0 && b[k] >= 0 && (max == -1 || a[k] > a[max] || (a[k] == a[max] && b[k] > b[max]))) {
-				max = k;
-			}
-		}
-		return max;
-	}
-
-	/**Returns the value of k such that a[k] is maximal.
-	 * @param a the array
-	 * @return the value of k required
-	 */
-	public static int argMax(double[] a) {
-		int max = 0;
-
-		for (int k = 1; k < a.length; k++) {
-			if (a[k] > a[max]) {
-				max = k;
-			}
-		}
-		return max;
-	}
-
-	/**Returns the value of k such that (a[k], b[k]) is lexicographically minimal
-	 * among those pairs such that both a[i] and b[i] are positive.
-	 *
-	 * @param a the first array
-	 * @param b the second array (must be at least as long as the first).
-	 * @return the value of k required
-	 */
-	public static int argMin(int[] a, int[] b) {
-		int min = -1;
-		for (int k = 0; k < a.length; k++) {
-			if (a[k] >= 0 && b[k] >= 0 && (min == -1 || a[k] < a[min] || (a[k] == a[min] && b[k] < b[min]))) {
-				min = k;
-			}
-		}
-		return min;
-	}
-
 	private void calculateEdgesThroughSCCF(int[] arcs) {
 		int v = 0;
 		int w;
@@ -198,7 +150,6 @@ public class NewSumSweepDir {
 		calculateEdgesThroughSCCB(arcs);
 	}
 
-	// alg - distances - SumSweepDir
 	/**
 	 * Instantiates this object using the biggest weakly connected component of the given graph.
 	 * @param g the input graph.
@@ -406,7 +357,7 @@ public class NewSumSweepDir {
 	 */
 	private int findPivotForSingleCCDiam(int[] pivot) {
 		int[] sccBonus = computeSCCBonus();
-		return pivot[NewSumSweepDir.argMax(sccBonus, sccBonus)];
+		return pivot[Utilities.argMax(sccBonus, sccBonus)];
 	}
 
 	/** Computes a step of the SumSweep, performing a backward BFS. Updates the bounds.
@@ -442,7 +393,6 @@ public class NewSumSweepDir {
 		uB[start] = eccB;
 
 		checkNewEccB(start);
-
 
 		for (int i = 0; i < graph.numNodes(); i++) {
 			if (totDistF[i] >= 0) {
@@ -522,15 +472,15 @@ public class NewSumSweepDir {
 
 	/**
 	 * Performs a BFS and updates all required bounds
-	 * @param start the starting vertex
+	 *
+	 * @param start   the starting vertex
 	 * @param forward if true, the BFS is performed forward.
-	 * @return a visit.DistWithSCC containing all necessary information.
+	 * @return a DistWithSCC containing all necessary information.
 	 */
 	private DistWithSCC singleBFS(int start, boolean forward) {
 		DistWithSCC visit = new DistWithSCC(graph.numNodes(), start, scc.component);
 		int ecc;
 		if (forward) {
-
 			NewImmutableGraph.performBFS(graph, visit);
 			ecc = visit.distances[visit.far];
 
@@ -539,7 +489,6 @@ public class NewSumSweepDir {
 			uF[start] = ecc;
 			checkNewEccF(start);
 		} else {
-
 			NewImmutableGraph.performBBFS(revgraph, visit);
 			ecc = visit.distances[visit.far];
 
@@ -731,9 +680,9 @@ public class NewSumSweepDir {
 
 		for (int i = 1; i < initialSumSweepIter; i++) {
 			if (i % 2 == 0) {
-				stepSumSweepForward(NewSumSweepDir.argMax(totDistF, lF));
+				stepSumSweepForward(Utilities.argMax(totDistF, lF));
 			} else {
-				stepSumSweepBackward(NewSumSweepDir.argMax(totDistB, lB));
+				stepSumSweepBackward(Utilities.argMax(totDistB, lB));
 			}
 			sumSweepResults.add(diameter);
 			LOGGER.trace(bfsComplete, iter);
@@ -747,7 +696,7 @@ public class NewSumSweepDir {
 				lFRad[k] = -1;
 			}
 		}
-		stepSumSweepForward(NewSumSweepDir.argMin(totDistF, lFRad));
+		stepSumSweepForward(Utilities.argMin(totDistF, lFRad));
 		LOGGER.trace(bfsComplete, iter);
 	}
 
@@ -824,9 +773,9 @@ public class NewSumSweepDir {
 				}
 			}
 
-			w1 = NewSumSweepDir.argMax(uF, totDistF);
-			w2 = NewSumSweepDir.argMax(uB, totDistB);
-			v = NewSumSweepDir.argMin(lFRad, totDistF);
+			w1 = Utilities.argMax(uF, totDistF);
+			w2 = Utilities.argMax(uB, totDistB);
+			v = Utilities.argMin(lFRad, totDistF);
 
 			if (iterR == -1 && (v == -1 || lF[v] >= radius)) {
 				iterR = iter;
@@ -850,23 +799,23 @@ public class NewSumSweepDir {
 				points[2] = -100;
 			}
 
-			i = NewSumSweepDir.argMax(points);
+			i = Utilities.argMax(points);
 
 			switch (i) {
-			case 0: // ONLY DIAM
-				singleCCUpperBound();
-				break;
-			case 1: // ONLY DIAM
-				stepSumSweepForward(w1);
-				break;
-			case 2: // ONLY RAD
-				stepSumSweepForward(v);
-				break;
-			case 3: // BOTH
-				stepSumSweepBackward(w2);
-				break;
-			case 4:
-				stepSumSweepBackward(NewSumSweepDir.argMax(totDistB, uB));
+				case 0: // ONLY DIAM
+					singleCCUpperBound();
+					break;
+				case 1: // ONLY DIAM
+					stepSumSweepForward(w1);
+					break;
+				case 2: // ONLY RAD
+					stepSumSweepForward(v);
+					break;
+				case 3: // BOTH
+					stepSumSweepBackward(w2);
+					break;
+				case 4:
+					stepSumSweepBackward(Utilities.argMax(totDistB, uB));
 				break;
 			}
 			checkNewBounds();
