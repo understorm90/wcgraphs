@@ -5,9 +5,6 @@ import it.unifi.simonesantarsiero.wcgraphs.commons.AlgorithmEnum;
 import it.unifi.simonesantarsiero.wcgraphs.commons.DatasetLogger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
@@ -132,23 +129,5 @@ public class DatasetResultsImporter {
             }
         }
         return mapResult;
-    }
-
-    private List<String> readFile(String filename) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            return readAllLines(reader);
-        } catch (Exception e) {
-            return Collections.emptyList();
-        }
-    }
-
-    private List<String> readAllLines(BufferedReader reader) throws IOException {
-        List<String> content = new ArrayList<>();
-        String line;
-
-        while ((line = reader.readLine()) != null) {
-            content.add(line);
-        }
-        return content;
     }
 }

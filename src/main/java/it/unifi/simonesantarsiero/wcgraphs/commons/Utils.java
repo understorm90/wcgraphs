@@ -3,7 +3,7 @@ package it.unifi.simonesantarsiero.wcgraphs.commons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -81,5 +81,32 @@ public class Utils {
             return listOfGraphs;
         }
         return Collections.emptyList();
+    }
+
+    public static List<String> readFile(String filename) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            return readAllLines(reader);
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
+
+    public static List<String> readAllLines(BufferedReader reader) throws IOException {
+        List<String> content = new ArrayList<>();
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            content.add(line);
+        }
+        return content;
+    }
+
+    public static void writeFile(String filename, String content) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            writer.write(content);
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

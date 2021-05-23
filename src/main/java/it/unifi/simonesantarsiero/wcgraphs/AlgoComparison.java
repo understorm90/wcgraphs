@@ -9,9 +9,6 @@ import it.unifi.simonesantarsiero.wcgraphs.sumsweep.SumSweep;
 import it.unifi.simonesantarsiero.wcgraphs.webgraph.WebGraph;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
@@ -111,15 +108,6 @@ public class AlgoComparison {
             loopDelim = delim;
         }
         return stringBuilder.toString();
-    }
-
-    private void writeFile(String filename, String content) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            writer.write(content);
-            writer.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void compareAlgorithmsForRandomGeneratedGraphs() {
