@@ -9,6 +9,9 @@ import it.unifi.simonesantarsiero.wcgraphs.sumsweep.SumSweep;
 import it.unifi.simonesantarsiero.wcgraphs.webgraph.WebGraph;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
@@ -17,8 +20,8 @@ public class AlgoComparison {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(AlgoComparison.class);
     private static final int MAX_DENSITY = 100;
-    private static final int MAX_VERTICES = 10000;
-    private static final int N_EXPERIMENTS = 1000;
+    private static final int MAX_VERTICES = 10000; // 10000 default
+    private static final int N_EXPERIMENTS = 1; //1000 default
     private static final String VALUE_TIME_MEAN = "Time (s) (mean of " + N_EXPERIMENTS + " experiments)";
     private static final boolean WITH_SYNTETIC_GRAPH = false;
 
@@ -63,6 +66,9 @@ public class AlgoComparison {
         algorithmEnumsList.forEach(algorithm -> algorithmResultsMap.put(algorithm.getValue(), new AlgorithmResults(algorithm.getValue())));
 
         Comparator comparator = new Comparator();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("graphName,algorithmName,");
+        stringBuilder.append(printHeaders(loader.getHeaders(), ",") + "\n");
         for (String filename : list) {
             for (AlgorithmEnum algorithmEnum : algorithmEnumsList) {
                 loader.printFilename(getGraphName(filename) + " [" + algorithmEnum.getValue() + "]");
@@ -72,13 +78,48 @@ public class AlgoComparison {
                 comparator.compute();
                 algorithmResultsMap.get(algorithmEnum.getValue()).add(comparator.getResults());
                 loader.printValues(comparator.getResults());
+                stringBuilder.append(getGraphName(filename) + "," + algorithmEnum.getValue() + ",");
+                stringBuilder.append(addResultToStringBuilder(loader.getHeaders(), comparator.getResults(), ",") + "\n");
             }
             loader.printEmptyRow();
         }
         LOGGER.info("\n\n");
+        writeFile("wcgraphs-export.txt", stringBuilder.toString());
 
         new Chart(new ArrayList<>(algorithmResultsMap.values()), true);
         new Chart(new ArrayList<>(algorithmResultsMap.values()), false);
+    }
+
+    private String printHeaders(List<String> headers, String delim) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String loopDelim = "";
+        for (String h : headers) {
+            stringBuilder.append(loopDelim);
+            stringBuilder.append(h);
+            loopDelim = delim;
+        }
+        return stringBuilder.toString();
+    }
+
+    private String addResultToStringBuilder(List<String> headers, Map<String, Object> results, String delim) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String loopDelim = "";
+        for (String h : headers) {
+            String valueToPrint = String.valueOf(results.get(h));
+            stringBuilder.append(loopDelim);
+            stringBuilder.append(valueToPrint);
+            loopDelim = delim;
+        }
+        return stringBuilder.toString();
+    }
+
+    private void writeFile(String filename, String content) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            writer.write(content);
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void compareAlgorithmsForRandomGeneratedGraphs() {
@@ -91,7 +132,9 @@ public class AlgoComparison {
         algorithmEnumsList.forEach(algorithm -> algorithmResultsMap.put(algorithm.getValue(), new AlgorithmResults(algorithm.getValue())));
 
         Comparator comparator = new Comparator();
-
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("graphName,algorithmName,");
+        stringBuilder.append(printHeaders(loader.getHeaders(), ",") + "\n");
         for (int density = 1; density < MAX_DENSITY; density += 10) {
             for (int nVertices = 1000; nVertices < MAX_VERTICES; nVertices += 1000) {
                 int mEdges = density * nVertices;
@@ -113,6 +156,8 @@ public class AlgoComparison {
                             double mean = algorithmResultsMap.get(algorithmEnum.getValue()).getMean();
                             results.put(VALUE_TIME_MEAN, mean);
                             loader.printValues(results);
+                            stringBuilder.append(getGraphName(basename) + "," + algorithmEnum.getValue() + ",");
+                            stringBuilder.append(addResultToStringBuilder(loader.getHeaders(), comparator.getResults(), ",") + "\n");
                         }
                     }
                 }
@@ -121,6 +166,7 @@ public class AlgoComparison {
         }
 
         LOGGER.info("\n\n");
+        writeFile("wcgraphs-export.txt", stringBuilder.toString());
 
         new Chart(new ArrayList<>(algorithmResultsMap.values()), true);
         new Chart(new ArrayList<>(algorithmResultsMap.values()), false);

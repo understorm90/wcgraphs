@@ -90,6 +90,10 @@ public class DatasetLogger {
         }
     }
 
+    public List<String> getHeaders() {
+        return headers;
+    }
+
     public void printFilename(String filename) {
         setContLengths(0);
         printValue(filename, true);
