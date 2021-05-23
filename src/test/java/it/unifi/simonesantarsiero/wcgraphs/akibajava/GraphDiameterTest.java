@@ -1,6 +1,5 @@
 package it.unifi.simonesantarsiero.wcgraphs.akibajava;
 
-import it.unifi.simonesantarsiero.wcgraphs.commons.RandomGraphGenerator;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -68,14 +67,5 @@ public class GraphDiameterTest {
         Assert.assertEquals(8295, sut.getNumVertices());
         Assert.assertEquals(10, diameter);
         Assert.assertEquals(3, sut.getNumBFS());
-    }
-
-    @Test
-    public void testGraphDiameter_randomGraph() {
-        RandomGraphGenerator randomGraphGenerator = new RandomGraphGenerator(3);
-        String randomGraphFilename = randomGraphGenerator.writeToFileTSV();
-        GraphDiameter sut = new GraphDiameter();
-        int diameter = sut.getDiameter(randomGraphFilename);
-        System.out.println(diameter);
     }
 }

@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
@@ -17,6 +16,9 @@ public class RandomGraphGenerator {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(RandomGraphGenerator.class);
     public static final String EMPTY_STRING = "";
+
+    private static final int MAX_DENSITY = 100;
+    private static final int MAX_VERTICES = 10000;
 
     private final int nVertices;
     private final int mEdges;
@@ -28,36 +30,12 @@ public class RandomGraphGenerator {
     public static final int DEFAULT_ZETA_K = 3;
     private final Random r = new Random();
 
-    public RandomGraphGenerator(int vertices) {
-        nVertices = vertices;
-        mEdges = (r.nextInt(vertices * vertices - 1)) + 1;
-        edges = null;
-
-        generate();
-    }
-
     public RandomGraphGenerator(int vertices, int edges) {
         nVertices = vertices;
         mEdges = edges;
         this.edges = null;
 
         generate();
-    }
-
-    public int getVertices() {
-        return nVertices;
-    }
-
-    public int getEdges() {
-        return mEdges;
-    }
-
-    public List<Pair<Integer, Integer>> getListOfEdges() {
-        return edges;
-    }
-
-    public double getDensity() {
-        return (double)mEdges/ nVertices;
     }
 
     /**
@@ -111,7 +89,7 @@ public class RandomGraphGenerator {
             basename = RANDOM_GENERATED_DATASETS_PATH;
         }
 
-        basename += "random-graph_v" + nVertices + "_e" + mEdges;
+        basename += "random-graph-v" + nVertices + "-e" + mEdges;
         try (
                 BufferedWriter bw1 = new BufferedWriter(new FileWriter(basename + EXT_TSV));
                 BufferedWriter bw2 = new BufferedWriter(new FileWriter(basename + EXT_ARCS));
@@ -149,5 +127,17 @@ public class RandomGraphGenerator {
                     .append("\n");
         }
         return builder.toString();
+    }
+
+    public static void main(String[] args) {
+        for (int density = 1; density < MAX_DENSITY; density += 10) {
+            for (int nVertices = 1000; nVertices < MAX_VERTICES; nVertices += 1000) {
+                int mEdges = density * nVertices;
+
+                RandomGraphGenerator randomGraphGenerator = new RandomGraphGenerator(nVertices, mEdges);
+                String basename = randomGraphGenerator.writeToFileTSV();
+                DatasetUtils.generateFilesForWebgraph(basename);
+            }
+        }
     }
 }
