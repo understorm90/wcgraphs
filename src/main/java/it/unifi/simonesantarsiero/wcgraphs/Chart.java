@@ -18,6 +18,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static it.unifi.simonesantarsiero.wcgraphs.commons.Utils.*;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
@@ -27,12 +28,26 @@ public class Chart {
     public static final String WINDOW_TITLE = "Algorithms Comparison";
     public static final String PANEL_TITLE = "Graphical Representation";
     public static final String X_AXIS_LABEL = "n (# vertices)";
-    public static final String Y_AXIS_LABEL = "time (seconds)";
+    public static final String Y_AXIS_TIME_LABEL = "time (seconds)";
+    public static final String Y_AXIS_BFS_LABEL = "#BFS";
     public static final String TITLE_LABEL = "Comparison between %s algorithms";
     private final List<AlgorithmResults> algorithmsResults;
+    private final boolean isTimeValueOnYAxis;
 
-    public Chart(List<AlgorithmResults> algorithmsResults) {
-        this.algorithmsResults = algorithmsResults;
+    public Chart(List<AlgorithmResults> algorithmsResults, boolean withTime) {
+        isTimeValueOnYAxis = withTime;
+
+        List<String> visibleAlgorithms = new ArrayList<>();
+        visibleAlgorithms.add(AlgorithmEnum.NEWSUMSWEEP.getValue());
+        visibleAlgorithms.add(AlgorithmEnum.SUMSWEEP.getValue());
+        visibleAlgorithms.add(AlgorithmEnum.WEBGRAPH.getValue());
+        visibleAlgorithms.add(AlgorithmEnum.AKIBA_JAVA.getValue());
+        visibleAlgorithms.add(AlgorithmEnum.AKIBA_CPP.getValue());
+
+        this.algorithmsResults = algorithmsResults
+                .stream()
+                .filter(result -> isVisible(visibleAlgorithms, result.getAlgorithmName()))
+                .collect(Collectors.toList());
 
         JFrame frame = new JFrame(WINDOW_TITLE);
 
@@ -51,6 +66,10 @@ public class Chart {
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
+    private boolean isVisible(List<String> visibleAlgorithms, String algorithmName) {
+        return visibleAlgorithms.stream().anyMatch(str -> str.trim().equals(algorithmName));
+    }
+
     private XYDataset createDataset() {
         XYSeriesCollection dataset = new XYSeriesCollection();
         for (AlgorithmResults algo : algorithmsResults) {
@@ -64,7 +83,12 @@ public class Chart {
         XYSeries series = new XYSeries(results.getAlgorithmName());
         for (int i = 0; i < results.size(); i++) {
             Map<String, Object> result = results.get(i);
-            series.add((Integer) result.get(VALUE_VERTICES), (Double) result.get(VALUE_TIME));
+            if (isTimeValueOnYAxis) {
+                series.add((Integer) result.get(VALUE_VERTICES), (Double) result.get(VALUE_TIME));
+            } else {
+                series.add((Integer) result.get(VALUE_VERTICES), (Integer) result.get(VALUE_NUM_OF_BFS));
+
+            }
         }
         return series;
     }
@@ -76,7 +100,7 @@ public class Chart {
         JFreeChart chart = ChartFactory.createXYLineChart(
                 title,
                 X_AXIS_LABEL,
-                Y_AXIS_LABEL,
+                isTimeValueOnYAxis ? Y_AXIS_TIME_LABEL : Y_AXIS_BFS_LABEL,
                 dataset,
                 PlotOrientation.VERTICAL,
                 true,
@@ -154,9 +178,14 @@ public class Chart {
         for (int i = 0; i < algorithmResults.size(); i++) {
             Map<String, Object> result = algorithmResults.get(i);
             Integer nVertices = (Integer) result.get(VALUE_VERTICES);
-            Double time = (Double) result.get(VALUE_TIME);
             String datasetName = (String) result.get(VALUE_DATASET);
-            datasetNames.put(nVertices + " ," + time, datasetName);
+            if (isTimeValueOnYAxis) {
+                Double time = (Double) result.get(VALUE_TIME);
+                datasetNames.put(nVertices + " ," + time, datasetName);
+            } else {
+                Integer nBFS = (Integer) result.get(VALUE_NUM_OF_BFS);
+                datasetNames.put(nVertices + " ," + nBFS, datasetName);
+            }
         }
         return datasetNames;
     }
@@ -176,7 +205,8 @@ public class Chart {
 
             List<AlgorithmResults> algorithmsResults = Arrays.asList(mStatsAkibaCPP, mStatsAkiba);
 
-            new Chart(algorithmsResults);
+            new Chart(algorithmsResults, true);
+            new Chart(algorithmsResults, false);
         });
     }
 

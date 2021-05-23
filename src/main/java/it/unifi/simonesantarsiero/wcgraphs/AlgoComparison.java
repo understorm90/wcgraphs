@@ -77,7 +77,8 @@ public class AlgoComparison {
         }
         LOGGER.info("\n\n");
 
-        new Chart(new ArrayList<>(algorithmResultsMap.values()));
+        new Chart(new ArrayList<>(algorithmResultsMap.values()), true);
+        new Chart(new ArrayList<>(algorithmResultsMap.values()), false);
     }
 
     private void compareAlgorithmsForRandomGeneratedGraphs() {
@@ -121,7 +122,8 @@ public class AlgoComparison {
 
         LOGGER.info("\n\n");
 
-        new Chart(new ArrayList<>(algorithmResultsMap.values()));
+        new Chart(new ArrayList<>(algorithmResultsMap.values()), true);
+        new Chart(new ArrayList<>(algorithmResultsMap.values()), false);
     }
 
     private AlgorithmStrategy getAlgorithm(AlgorithmEnum algorithmEnum) {
