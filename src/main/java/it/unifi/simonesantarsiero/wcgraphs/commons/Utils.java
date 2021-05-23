@@ -18,6 +18,7 @@ public class Utils {
 
     public static final String DATASETS_PATH = getProperty("datasetsPath");
     public static final String RANDOM_GENERATED_DATASETS_PATH = getProperty("generatedDatasetsPath");
+    public static final String IMPORT_PATH = getProperty("importPath");
 
     public static final String VALUE_GRAPH = "Graph";
     public static final String VALUE_DATASET = "dataset";
