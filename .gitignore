@@ -1,2 +1,10 @@
 # Project exclude paths
 /target/
+/_test_WCC.arcs
+/_test_WCC.graph
+/_test_WCC.offsets
+/_test_WCC.properties
+/wcgraphs.log
+/.idea/
+/DATASETS/
+wcgraphs-export.txt
