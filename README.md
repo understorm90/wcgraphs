@@ -26,6 +26,9 @@ Successivamente, è necessario spostarsi nella cartella del progetto che contien
 cd /Users/Simone/workspace-unifi/wcgraphs/
 mvn clean package
 ```
+## Dataset
+
+A scopo di esempio, vengono forniti alcuni dataset nella cartella "DATASET/test/".
 
 ## Esempi di utilizzo
 
