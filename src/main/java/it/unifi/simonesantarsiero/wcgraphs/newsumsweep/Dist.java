@@ -40,4 +40,16 @@ public class Dist implements VisitBFS {
 	public void atEndVisit() {
 		// not implemented
 	}
+
+	public int getDistanceFromNode(int node) {
+		return distances[node];
+	}
+
+	public int getFar() {
+		return far;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
 }

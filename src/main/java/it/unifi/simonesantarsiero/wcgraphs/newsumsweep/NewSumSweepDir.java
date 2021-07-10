@@ -821,7 +821,7 @@ public class NewSumSweepDir {
 			checkNewBounds();
 
 			printData();
-			points[i] = ((double)lastImprovement / cost[i]);
+			points[i] = ((double) lastImprovement / cost[i]);
 			for (int j = 1; j < points.length; j++) {
 				points[(i + j) % points.length] = points[(i + j) % points.length] + 2.0 / iter;
 			}
@@ -830,15 +830,58 @@ public class NewSumSweepDir {
 		LOGGER.debug("Diameter: {} ({} iterations).\n", getD(), getIterD());
 	}
 
-	public int getlF(int i) {return lF[i];}
-	public int getuF(int i) {return uF[i];}
-	public int getlB(int i) {return lB[i];}
-	public int getuB(int i) {return uB[i];}
+	public static int[] computeAllEccentricities(ImmutableGraph g) {
+		int start = 0;
+		int end = g.numNodes();
+		Dist visit = new Dist(g.numNodes(), start);
+		int[][] dist = new int[g.numNodes()][g.numNodes()];
+		int[] ecc = new int[g.numNodes()];
 
-	public ImmutableGraph getGraph() { return graph; }
-	public ImmutableGraph getRevGraph() { return revgraph; }
-	public ImmutableGraph getSccDag() { return sccDag; }
-	public ImmutableGraph getRevSccDag() { return revsccDag; }
+		for (int i = start; i < end; i++) {
+			visit.setStart(i);
+			NewImmutableGraph.performBFS(g, visit);
+
+			for (int j = 0; j < g.numNodes(); j++) {
+				dist[i][j] = visit.getDistanceFromNode(j);
+				LOGGER.info("Distance from {} to {}: {}\n", i, j, dist[i][j]);
+			}
+			ecc[i] = visit.getDistanceFromNode(visit.getFar());
+		}
+
+		return ecc;
+	}
+
+	public int getlF(int i) {
+		return lF[i];
+	}
+
+	public int getuF(int i) {
+		return uF[i];
+	}
+
+	public int getlB(int i) {
+		return lB[i];
+	}
+
+	public int getuB(int i) {
+		return uB[i];
+	}
+
+	public ImmutableGraph getGraph() {
+		return graph;
+	}
+
+	public ImmutableGraph getRevGraph() {
+		return revgraph;
+	}
+
+	public ImmutableGraph getSccDag() {
+		return sccDag;
+	}
+
+	public ImmutableGraph getRevSccDag() {
+		return revsccDag;
+	}
 
 	public IntArrayList[] getEdgesThroughSCCF() { return edgesThroughSCCF; }
 	public StronglyConnectedComponents getScc() { return scc; }
